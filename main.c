@@ -147,7 +147,7 @@ gint anim_loop_timeout(G_GNUC_UNUSED gpointer data) { /* Writes directly to scre
 		      levelpixmap, (updx+1)*pixwidth, (updy+1)*pixheight, (updx+1)*pixwidth, 
 		      (updy+1)*pixheight, pixwidth, pixheight);
     }
-    if ((outx - 1) > (gridx-2) || (outy - 1) > (gridy-2) || evalret < 0) { /* All balls must roll to an end. */
+    if ((outx < 0) || (outy < 0) || (outx + 1 > gridx) || (outy + 1 > gridy) || evalret < 0) { /* All balls must roll to an end. */
       if (histkeeper) freehist(histkeeper);
       if (evalret >= 0) {
 	borderdraw();
@@ -174,7 +174,7 @@ gint anim_loop_timeout(G_GNUC_UNUSED gpointer data) { /* Writes directly to scre
 	do {
 	  /* printf("x: %d y: %d\n",outx, outy); */
 	  grideval(outx, outy, outdir, invisigrid);
-	} while (((outx + 1) < (gridx+1)) && ((outy + 1) < (gridy+1)) && (evalret >= 0));
+	} while ((outx >= 0) && (outy >= 0) && (outx < gridx) && (outy < gridy) && (evalret >= 0));
 	if (histkeeper) freehist(histkeeper);
 	/* if (outx == 0 || outx == gridx+1) outy--; else outx--; */
 	/* printf("Final x: %d y: %d\n",outx,outy); */
@@ -317,7 +317,7 @@ static gint checkbarbut_event(G_GNUC_UNUSED GtkWidget *widget, G_GNUC_UNUSED gpo
       if (histkeeper) histkeeper = inithist(tmpinvisigrid);  
       do {
 	grideval(outx, outy, outdir, tmpinvisigrid);
-      } while ((outx + 1) < (gridx+1) && (outy + 1) < (gridy+1) && evalret >= 0);
+      } while ((outx >= 0) && (outy >= 0) && (outx < gridx) && (outy < gridy) && evalret >= 0);
       /* printf("Invis out: %d %d %d\n",outx,outy,outdir); */
       if (histkeeper) freehist(histkeeper);
       saveoutx = outx; saveouty = outy; saveret = evalret;
@@ -325,7 +325,7 @@ static gint checkbarbut_event(G_GNUC_UNUSED GtkWidget *widget, G_GNUC_UNUSED gpo
       if (histkeeper) histkeeper = inithist(tmpgrid);  
       do {
 	grideval(outx, outy, outdir, tmpgrid);
-      } while ((outx + 1) < (gridx+1) && (outy + 1) < (gridy+1) && evalret >= 0);
+      } while ((outx >= 0) && (outy >= 0) && (outx < gridx) && (outy < gridy) && evalret >= 0);
       /* printf("Your out: %d %d %d\n",outx,outy,outdir); */
       if (histkeeper) freehist(histkeeper);
       if ((saveoutx != outx || saveouty != outy) && (saveret != evalret || evalret >= 0)) {
@@ -607,7 +607,7 @@ static gint tooldraw_button_press_event(G_GNUC_UNUSED GtkWidget *widget, GdkEven
   if (animmode || checked) return FALSE;
   dragmode = 1;
   dragx = 0; dragy = event->y/pixheight; 
-  if (dragy >= bufsize) {
+  if (dragy >= (int)bufsize) {
     dragorigin = PlNowhere;
     gdk_window_set_cursor(mainwin->window, makecursor(GDK_LEFT_PTR));
     return FALSE;

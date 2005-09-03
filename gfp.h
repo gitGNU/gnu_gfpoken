@@ -3,9 +3,9 @@
 #include <gtk/gtk.h> /* The Gee! I wonder why they implemented it that way Toolkit */
 
 /* Typedefs */
-typedef unsigned char obj;
-typedef unsigned char vect;
-typedef unsigned char pos;
+typedef unsigned int obj;
+typedef unsigned int vect;
+typedef int pos;
 
 /* For history */
 typedef unsigned int histbit;

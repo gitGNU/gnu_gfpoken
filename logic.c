@@ -156,7 +156,7 @@ void grideval(pos x, pos y, vect dir, obj *gr) { /* Note: This routine is evil, 
     }
     if (saver == ObEMULDRMirror) dir ^= 2;
     dir ^= 1;
-    if ((gr[ysave*gridx+xsave] == ObNone) && (xsave < gridx) && (ysave < gridy)) { 
+    if ((gr[ysave*gridx+xsave] == ObNone) && (xsave >= 0) && (ysave >= 0) && (xsave < gridx) && (ysave < gridy)) { 
       evalret = RetMovement;
       gr[ysave*gridx+xsave] = saver;
       updx = xsave; updy = ysave;

@@ -54,8 +54,8 @@ int histcheck(pos xpos, pos ypos, vect dir, obj *gr, histhash *hist) { /*Bool*/
   histbit *newhist;
   histnode *node, *newnode;
   pos x, y=0;
-  int n;
-  unsigned int itemcounter=0, changecounter=0, hashspot=-1;
+  int n, hashspot=-1;
+  unsigned int itemcounter=0, changecounter=0;
   unsigned int histregister;
   unsigned int majoroffset, minoroffset;
   if ((gr[xpos+gridx*ypos] == ObEMULDRMirror) || (gr[xpos+gridx*ypos] == ObEMURDLMirror))

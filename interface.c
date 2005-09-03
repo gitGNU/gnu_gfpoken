@@ -9,7 +9,7 @@
 
 /* Drawing routines - GTK specific */
 void borderdraw() {
-  unsigned int xcounter, pmloc, ycounter=0;
+  int xcounter, pmloc, ycounter=0;
   arrinused[arrhistptr]=0; arroutused[arrhistptr]=0;
   for (; ycounter < gridy+2; ycounter++) {
     for (xcounter = 0; xcounter < gridx+2; xcounter++) {
@@ -196,7 +196,7 @@ void bardraw() { /* This is ONLY used to create a new toolbar, which is frequent
 }
 
 void fullgriddraw() { /* This is ONLY used to create a new grid */ 
-  unsigned int ycounter=0, xcounter, pmloc;
+  int ycounter=0, xcounter, pmloc;
   gint colordepth;
   if (levelpixmap) gdk_pixmap_unref(levelpixmap);
   colordepth = gdk_window_get_visual(tooldraw->window)->depth;
