@@ -1,6 +1,6 @@
 bin_PROGRAMS = gfpoken
 
-CFLAGS = @GTK_CFLAGS@
+AM_CFLAGS = @GTK_CFLAGS@
 
 LDADD = @GTK_LIBS@
 

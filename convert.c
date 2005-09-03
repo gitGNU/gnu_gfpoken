@@ -2,6 +2,8 @@
  GFingerPoken Conversion, 1:1 Style Functions
 ********************************************/
 
+#include <stdlib.h>
+
 #include "gfp.h"
 #include "common.h"
 

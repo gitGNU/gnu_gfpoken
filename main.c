@@ -3,6 +3,7 @@
 ********************************************/
 
 #include <stdlib.h>  /* For rand */
+#include <string.h>  /* For memcpy */
 #include <stdio.h>   /* Only for printf */
 #include <time.h>    /* For time (seed rand) */
 

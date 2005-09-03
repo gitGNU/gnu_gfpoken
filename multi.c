@@ -521,7 +521,7 @@ gint clientmonitor(G_GNUC_UNUSED gpointer data, G_GNUC_UNUSED gint source, G_GNU
     break;
   case 'B': /* Board data */
     /* printf("Client: Decoding board data...\n"); */
-    for(; *st != '\n'; blockspot++) { /* Danger is my middle name */
+    for(; *st && *st != '\n'; blockspot++) {
       if ((invisigrid[blockspot] = strtol(st, &st, 10))) {
 	dragbuf[objtodr(invisigrid[blockspot])]++;
 	bufsize++;
@@ -680,8 +680,8 @@ gint servermonitor(G_GNUC_UNUSED gpointer data, G_GNUC_UNUSED gint source, G_GNU
   return TRUE;
 }
 
-gint accept_loop_timeout(gpointer data) {
-  int clientlen;
+gint accept_loop_timeout(G_GNUC_UNUSED gpointer data) {
+  socklen_t clientlen = sizeof (struct sockaddr_in);
   if ((remotesock = accept(localsock, (struct sockaddr *)&remoteaddr, &clientlen)) == -1) {
     switch (errno) {
     case EWOULDBLOCK:
