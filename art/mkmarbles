@@ -1,0 +1,8 @@
+#!/bin/bash
+blender -b marbles.blend -a
+
+montage -geometry +0+0 -tile 64x1 -compose Copy -background none `seq 1 64 | xargs printf "/tmp/%04d.png "` marbles.png
+
+pngtopnm marbles.png | ppmtoxpm -name picMarble | sed 's/\#0E0E38386666/None/' > marblepix.h
+
+rm marbles.png

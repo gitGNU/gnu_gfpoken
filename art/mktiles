@@ -1,0 +1,216 @@
+#!/bin/bash
+set -e
+
+num_tiles=33
+tile_size=32
+
+gimp -i -d -f -b - << EOF 2>/dev/null | grep '^ERROR' || :
+(set! image (car (gimp-file-load 1 "mirror.xcf" "mirror.xcf")))
+(set! layers (cadr (gimp-image-get-layers image)))
+(set! expansion 0)
+(set! collapse 1)
+(set! rotation 2)
+(set! move 3)
+(set! rotator 4)
+(set! axial 5)
+(set! sink 6)
+(set! block 7)
+(set! half 8)
+(set! normal 9)
+(set! bg 10)
+(set! numlayers 11)
+
+(define (use layer) (aref layers layer))
+(define (set layer value)
+	'("new value for layer" layer value)
+	(aset layers layer value)
+)
+(define (show layer) (gimp-drawable-set-visible (use layer) 1))
+(define (hide layer) (gimp-drawable-set-visible (use layer) 0))
+(define (save name)
+	(set! saver (car (gimp-image-duplicate image)))
+	(gimp-image-undo-disable saver)
+	(gimp-image-flatten saver)
+	(gimp-file-save 1 saver (car (gimp-image-get-active-drawable saver)) name name)
+	(gimp-image-delete saver)
+)
+(define (unfloat)
+	(set! float (car (gimp-image-get-floating-sel image)))
+	(cond ((>= float 0) (gimp-floating-sel-anchor float)))
+)
+(define (turn layer amount)
+	(set layer (car (gimp-drawable-transform-rotate-simple (use layer) amount 1 0 0 0)))
+	(unfloat)
+	(set! mask (car (gimp-layer-get-mask (use layer))))
+	(cond ((>= mask 0) 
+		(gimp-drawable-transform-rotate-simple mask amount 1 0 0 0)
+	))
+	(unfloat)
+)
+(define (turncw layer) (turn layer 0))
+(define (turnccw layer) (turn layer 2))
+(define (mirror layer)
+	(set layer (car (gimp-drawable-transform-flip-simple (use layer) 0 1 0 0)))
+	(unfloat)
+	(set! mask (car (gimp-layer-get-mask (use layer))))
+	(cond ((>= mask 0) 
+		(gimp-drawable-transform-flip-simple mask 0 1 0 0)
+	))
+	(unfloat)
+)
+
+; set all layers to not visible
+(set! i 0)
+(while (< i numlayers)
+	(hide i)
+	(set! i (+ i 1))
+)
+
+(show bg)
+(save "00_bg.bmp")
+
+(show normal)
+(save "01_normal.bmp")
+
+(turncw normal)
+(save "02_normal.bmp")
+
+(turnccw normal)
+(show rotation)
+(save "03_flip2.bmp")
+
+(turncw normal)
+(save "04_flip2.bmp")
+
+(hide rotation)
+(turnccw normal)
+(show collapse)
+(save "05_flip4.bmp")
+
+(hide collapse)
+(show expansion)
+(hide normal)
+(show block)
+(save "06_flip4.bmp")
+
+(hide expansion)
+(show collapse)
+(hide block)
+(show normal)
+(turncw normal)
+(turncw collapse)
+(save "07_flip4.bmp")
+
+(hide collapse)
+(turnccw collapse)
+(hide normal)
+(turnccw normal)
+(show expansion)
+(show block)
+(turncw expansion)
+(save "08_flip4.bmp")
+
+(hide expansion)
+(save "09_block.bmp")
+
+(show sink)
+(hide block)
+(save "10_sink.bmp")
+
+(hide sink)
+(show axial)
+(save "11_axial.bmp")
+
+(turncw axial)
+(save "12_axial.bmp")
+
+(turnccw axial)
+(show rotation)
+(save "13_axial2.bmp")
+
+(turncw axial)
+(save "14_axial2.bmp")
+
+(hide axial)
+(hide rotation)
+(show rotator)
+(save "15_rotator.bmp")
+
+(mirror rotator)
+(save "16_rotator.bmp")
+
+(mirror rotator)
+(show rotation)
+(save "17_rotator2.bmp")
+
+(mirror rotator)
+(save "18_rotator2.bmp")
+
+(hide rotator)
+(hide rotation)
+(show half)
+(save "19_half.bmp")
+
+(turncw half)
+(turncw half)
+(save "20_half.bmp")
+
+(turncw half)
+(save "21_half.bmp")
+
+(turncw half)
+(turncw half)
+(save "22_half.bmp")
+
+(show rotation)
+(turnccw half)
+(save "23_half4.bmp")
+
+(turncw half)
+(save "24_half4.bmp")
+
+(turncw half)
+(save "25_half4.bmp")
+
+(turncw half)
+(save "26_half4.bmp")
+
+(mirror rotation)
+(turnccw half)
+(save "27_half4.bmp")
+
+(turnccw half)
+(save "28_half4.bmp")
+
+(turnccw half)
+(save "29_half4.bmp")
+
+(turnccw half)
+(save "30_half4.bmp")
+
+(hide half)
+(show normal)
+(hide rotation)
+(show move)
+(save "31_move.bmp")
+
+(turncw normal)
+(save "32_move.bmp")
+
+(gimp-quit 1)
+EOF
+
+#pnmcat -lr [0-9][0-9]*.ppm | ppmquant -fs 256 > alltiles.ppm 2>/dev/null
+#pnmcat -lr [0-9][0-9]*.ppm > alltiles.ppm 2>/dev/null
+: > tilepix.h
+#for i in `seq 0 $[$num_tiles-1]` ; do
+	#pnmcut $[$i*$tile_size] 0 $tile_size $tile_size alltiles.ppm \
+		#| ppmtoxpm -name tile`printf %02d $i`_xpm \
+		#>> tilepix.h 2>/dev/null
+#done
+for file in [0-9][0-9]*.bmp ; do
+	echo "unsigned char img_${file%.bmp}[] = { "
+	hexdump -v -s 54 -e '1/1 "0x%02x, "' "$file"
+	echo "0 };"
+done | fold -s >> tilepix.h
+rm [0-9][0-9]*.bmp
