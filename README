@@ -1,9 +1,9 @@
 GFingerPoken 0.25 January 14, 2000
-Code, text by Martin Hock (oxymoron@cmu.edu)
+Code, text by Martin Hock and Bas Wijnen <shevek@fmf.nl>
 [all content except that specified below]
 Copyright 1999-2000 Martin Hock.
 GFP-specific graphics by Jason Reed (godel@cmu.edu) 
-[represented by iconpix.h, marblepix.h, and tilepix.h]
+[represented by iconpix.h]
 Copyright 1999 Jason Reed.
 
 Borrowed from GNOME (used with permission of author):

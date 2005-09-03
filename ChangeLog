@@ -8,6 +8,7 @@
 	chars for most types.
 	* main.c: Load images differently
 	* main.c, multi.c: Use %zd for printing sizes.
+	* Most files: Add proper copyright notice.
 
 0.25 (January 14 2000): A small bug fix.
 * Removed a memory leak reported as Debian bug #50140 by Daniel Burrows.
