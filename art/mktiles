@@ -5,7 +5,7 @@ num_tiles=33
 tile_size=32
 
 gimp -i -d -f -b - << EOF 2>/dev/null | grep '^ERROR' || :
-(set! image (car (gimp-file-load 1 "mirror.xcf" "mirror.xcf")))
+(set! image (car (gimp-file-load 1 "`dirname "$0"`/mirror.xcf" "`dirname "$0"`/mirror.xcf")))
 (set! layers (cadr (gimp-image-get-layers image)))
 (set! expansion 0)
 (set! collapse 1)
