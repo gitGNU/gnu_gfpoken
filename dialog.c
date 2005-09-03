@@ -61,7 +61,7 @@ void initlevel() { /* Create new level, put it in grid, etc. */
   if (invisigrid) free(invisigrid); invisigrid = (obj *)calloc(gridx*gridy, sizeof(obj));
   if (markgrid) free(markgrid); markgrid = (obj *)calloc(gridx*gridy, sizeof(obj));
   if (!(grid && invisigrid && markgrid)) {
-    fprintf(stderr, "Insufficient memory for allocating level; needed %d bytes\n",
+    fprintf(stderr, "Insufficient memory for allocating level; needed %zd bytes\n",
 	    3*gridx*gridy*sizeof(obj));
     exit(1);
   }  
@@ -201,7 +201,7 @@ int loadlevel(char *filename) { /* Max 80 char width: Max 20 width levels, so A-
 	if (invisigrid) free(invisigrid); invisigrid = (obj *)malloc(gridx*gridy*sizeof(obj));
 	if (markgrid) free(markgrid); markgrid = (obj *)malloc(gridx*gridy*sizeof(obj));
 	if (!(grid && invisigrid && markgrid)) {
-	  fprintf(stderr, "Insufficient memory for allocating level; needed %d bytes\n",
+	  fprintf(stderr, "Insufficient memory for allocating level; needed %zd bytes\n",
 		  3*gridx*gridy*sizeof(obj));
 	  exit(1);
 	}  

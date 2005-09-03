@@ -501,7 +501,7 @@ gint clientmonitor(G_GNUC_UNUSED gpointer data, G_GNUC_UNUSED gint source, G_GNU
     if (invisigrid) free(invisigrid); invisigrid = (obj *)malloc(gridx*gridy*sizeof(obj)); /* will be completely filled */
     if (markgrid) free(markgrid); markgrid = (obj *)calloc(gridx*gridy, sizeof(obj));
     if (!(grid && invisigrid && markgrid)) {
-      fprintf(stderr, "Insufficient memory for allocating level; needed %d bytes\n",
+      fprintf(stderr, "Insufficient memory for allocating level; needed %zd bytes\n",
 	      3*gridx*gridy*sizeof(obj));
       exit(1);
     }

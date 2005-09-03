@@ -293,7 +293,7 @@ static gint checkbarbut_event(G_GNUC_UNUSED GtkWidget *widget, G_GNUC_UNUSED gpo
   tmpgrid = (obj *)malloc(gridx*gridy*sizeof(obj));
   tmpinvisigrid = (obj *)malloc(gridx*gridy*sizeof(obj));
   if (!(tmpgrid && tmpinvisigrid)) {
-    fprintf(stderr, "Insufficient memory for allocating temporary data; needed %d bytes\n",
+    fprintf(stderr, "Insufficient memory for allocating temporary data; needed %zd bytes\n",
 	    2*gridx*gridy*sizeof(obj));
     if (netmode) {
       netsend('N');

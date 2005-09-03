@@ -1,4 +1,4 @@
-gfpoken (0.25.dfsg.1-2) unstable; urgency=low
+gfpoken (0.26-1) unstable; urgency=low
 
   * Use %zd for printing sizes. (Closes: #323652)
   * Let autoreconf copy files if linking fails. (Closes: #323226)
