@@ -6,6 +6,7 @@
 	* multi.c: Check for sane input, initialise socklen_t before use.
 	* gfp.h, history.c, interface.c, logic.c, main.c: Use ints instead of
 	chars for most types.
+	* main.c: Load images differently
 
 0.25 (January 14 2000): A small bug fix.
 * Removed a memory leak reported as Debian bug #50140 by Daniel Burrows.

@@ -732,41 +732,66 @@ static gint tooldraw_button_release_event(G_GNUC_UNUSED GtkWidget *widget, G_GNU
 #define makepm(a) gdk_pixmap_create_from_xpm_d(mainwin->window, &trashmask, NULL, a)
 #define makemaskpm(a,b) gdk_pixmap_create_from_xpm_d(mainwin->window, &b, NULL, a)
 
+GdkPixmap *makepm2 (unsigned char *buffer)
+{
+  int x, y;
+  GdkPixmap *pixmap = gdk_pixmap_new (mainwin->window, 32, 32, -1);
+  for (y = 0; y < 16; ++y) {
+    for (x = 0; x < 32; ++x) {
+      unsigned char r, g, b;
+      int p = ((y * 32) + x) * 3;
+      int m = (((31 - y) * 32) + x) * 3;
+      r = buffer[p + 2];
+      g = buffer[p + 1];
+      b = buffer[p + 0];
+      buffer[p + 0] = buffer[m + 2];
+      buffer[p + 1] = buffer[m + 1];
+      buffer[p + 2] = buffer[m + 0];
+      buffer[m + 0] = r;
+      buffer[m + 1] = g;
+      buffer[m + 2] = b;
+    }
+  }
+  gdk_draw_rgb_image (pixmap, leveldraw->style->fg_gc[GTK_WIDGET_STATE(leveldraw)], 0, 0, 32, 32, GDK_RGB_DITHER_NONE, buffer, 3 * 32);
+  return pixmap;
+}
+
 void initpixmaps() { /* I really should be able to include raw GTK pixmaps, but I don't know of a way to. I have a feeling this is because GTK pixmaps are actually server-side X pixmaps. */
+  gdk_rgb_init();
   /* Non-masked (solid tile) */
-  tilepic[0] = makepm(tile00_xpm);
-  tilepic[1] = makepm(tile01_xpm);
-  tilepic[2] = makepm(tile02_xpm);
-  tilepic[3] = makepm(tile03_xpm);
-  tilepic[4] = makepm(tile04_xpm);
-  tilepic[5] = makepm(tile05_xpm);
-  tilepic[6] = makepm(tile06_xpm);
-  tilepic[7] = makepm(tile07_xpm);
-  tilepic[8] = makepm(tile08_xpm);
-  tilepic[9] = makepm(tile09_xpm);
-  tilepic[10] = makepm(tile10_xpm);
-  tilepic[11] = makepm(tile11_xpm);
-  tilepic[12] = makepm(tile12_xpm);
-  tilepic[13] = makepm(tile13_xpm);
-  tilepic[14] = makepm(tile14_xpm);
-  tilepic[15] = makepm(tile15_xpm);
-  tilepic[16] = makepm(tile16_xpm);
-  tilepic[17] = makepm(tile17_xpm);
-  tilepic[18] = makepm(tile18_xpm);
-  tilepic[19] = makepm(tile19_xpm);
-  tilepic[20] = makepm(tile20_xpm);
-  tilepic[21] = makepm(tile21_xpm);
-  tilepic[22] = makepm(tile22_xpm);
-  tilepic[23] = makepm(tile23_xpm);
-  tilepic[24] = makepm(tile24_xpm);
-  tilepic[25] = makepm(tile25_xpm);
-  tilepic[26] = makepm(tile26_xpm);
-  tilepic[27] = makepm(tile27_xpm);
-  tilepic[28] = makepm(tile28_xpm);
-  tilepic[29] = makepm(tile29_xpm);
-  tilepic[30] = makepm(tile30_xpm);
-  tilepic[31] = makepm(tile31_xpm);
-  tilepic[32] = makepm(tile32_xpm);
+  tilepic[0] = makepm2(img_00_bg);
+  tilepic[1] = makepm2(img_01_normal);
+  tilepic[2] = makepm2(img_02_normal);
+  tilepic[3] = makepm2(img_03_flip2);
+  tilepic[4] = makepm2(img_04_flip2);
+  tilepic[5] = makepm2(img_05_flip4);
+  tilepic[6] = makepm2(img_06_flip4);
+  tilepic[7] = makepm2(img_07_flip4);
+  tilepic[8] = makepm2(img_08_flip4);
+  tilepic[9] = makepm2(img_09_block);
+  tilepic[10] = makepm2(img_10_sink);
+  tilepic[11] = makepm2(img_11_axial);
+  tilepic[12] = makepm2(img_12_axial);
+  tilepic[13] = makepm2(img_13_axial2);
+  tilepic[14] = makepm2(img_14_axial2);
+  tilepic[15] = makepm2(img_15_rotator);
+  tilepic[16] = makepm2(img_16_rotator);
+  tilepic[17] = makepm2(img_17_rotator2);
+  tilepic[18] = makepm2(img_18_rotator2);
+  tilepic[19] = makepm2(img_19_half);
+  tilepic[20] = makepm2(img_20_half);
+  tilepic[21] = makepm2(img_21_half);
+  tilepic[22] = makepm2(img_22_half);
+  tilepic[23] = makepm2(img_23_half4);
+  tilepic[24] = makepm2(img_24_half4);
+  tilepic[25] = makepm2(img_25_half4);
+  tilepic[26] = makepm2(img_26_half4);
+  tilepic[27] = makepm2(img_27_half4);
+  tilepic[28] = makepm2(img_28_half4);
+  tilepic[29] = makepm2(img_29_half4);
+  tilepic[30] = makepm2(img_30_half4);
+  tilepic[31] = makepm2(img_31_move);
+  tilepic[32] = makepm2(img_32_move);
   borderpix = makepm(picBorder);
   /* Masked (sprite) */
   arrowpix[DUp] = makemaskpm(picDUp, arrowmask[DUp]);
