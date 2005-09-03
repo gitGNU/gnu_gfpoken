@@ -43,8 +43,8 @@ GdkCursor *makecursor(GdkCursorType cursor_type) {
 
 /* GTK event handlers */
 
-gint anim_loop_timeout(gpointer data) { /* Writes directly to screen.  It's updated frequently anyway. */
-  unsigned int counter=0;               /* Function used to be static */
+gint anim_loop_timeout(G_GNUC_UNUSED gpointer data) { /* Writes directly to screen.  It's updated frequently anyway. */
+  int counter=0;               /* Function used to be static */
   switch (animmode) {
   case 0:
     return TRUE;
@@ -201,11 +201,11 @@ gint anim_loop_timeout(gpointer data) { /* Writes directly to screen.  It's upda
   return TRUE;
 }
 
-void gamebox_destroy_event(GtkWidget *widget, gpointer data) {
+void gamebox_destroy_event(GtkWidget *widget, G_GNUC_UNUSED gpointer data) {
   gtk_grab_remove(widget);
 }
 
-void gamebox_button_clicked(GtkWidget *widget, gpointer data) {
+void gamebox_button_clicked(G_GNUC_UNUSED GtkWidget *widget, gpointer data) {
   gtk_widget_destroy(data);
 }
 
@@ -230,7 +230,7 @@ void gamebox(char *title, char *msg) {
   gtk_grab_add(window);
 }
 
-static gint newbarbut_event(GtkWidget *widget, gpointer data) {
+static gint newbarbut_event(G_GNUC_UNUSED GtkWidget *widget, G_GNUC_UNUSED gpointer data) {
   if (animmode) return FALSE;
   /*
     setmainpos = 1;
@@ -243,14 +243,14 @@ static gint newbarbut_event(GtkWidget *widget, gpointer data) {
   return FALSE;
 }
 
-static gint stopbarbut_event(GtkWidget *widget, gpointer data) {
+static gint stopbarbut_event(G_GNUC_UNUSED GtkWidget *widget, G_GNUC_UNUSED gpointer data) {
   if (animmode) return FALSE;
   netsend('N');
   netkill();
   return FALSE;
 }
 
-static gint checkbarbut_event(GtkWidget *widget, gpointer data) {
+static gint checkbarbut_event(G_GNUC_UNUSED GtkWidget *widget, G_GNUC_UNUSED gpointer data) {
   int xcounter=0, ycounter=0;
   pos saveoutx, saveouty;
   vect savedir;
@@ -378,7 +378,7 @@ static gint mainwin_configure_event(GtkWidget *widget, GdkEvent *event) {
 }
 */
 
-static gint netbarbut_event(GtkWidget *widget, gpointer data) {
+static gint netbarbut_event(G_GNUC_UNUSED GtkWidget *widget, G_GNUC_UNUSED gpointer data) {
   setstat("Ready");
   /*
     setmainpos = 1;
@@ -389,7 +389,7 @@ static gint netbarbut_event(GtkWidget *widget, gpointer data) {
   return FALSE;
 }
 
-static gint netturnbarbut_event(GtkWidget *widget, gpointer data) {
+static gint netturnbarbut_event(G_GNUC_UNUSED GtkWidget *widget, G_GNUC_UNUSED gpointer data) {
   if (paralyzed || pendack || !netmode) return FALSE;
   gtk_widget_hide(mainbarbut[INetTurn]);
   if (category == CatSeparate && opponentdone) {
@@ -404,7 +404,7 @@ static gint netturnbarbut_event(GtkWidget *widget, gpointer data) {
   return FALSE;
 }
 
-static gint flipboardsbarbut_event(GtkWidget *widget, gpointer data) {
+static gint flipboardsbarbut_event(G_GNUC_UNUSED GtkWidget *widget, G_GNUC_UNUSED gpointer data) {
   int counter=0;
   obj tmp;
   boardshow = !boardshow;
@@ -428,12 +428,12 @@ static gint flipboardsbarbut_event(GtkWidget *widget, gpointer data) {
   return FALSE;
 }  
 
-static gint aboutbarbut_event(GtkWidget *widget, gpointer data) {
+static gint aboutbarbut_event(G_GNUC_UNUSED GtkWidget *widget, G_GNUC_UNUSED gpointer data) {
   gamebox("About GFingerPoken","GFingerPoken 0.25 January 14, 2000\nCode by Martin Hock (oxymoron@cmu.edu)\nGame-specific graphics by Jason Reed (godel@cmu.edu)\nToolbar graphics by Tuomas Kuosmanen (tigert@gimp.org) from gnome-stock\nLicensed under the GNU General Public License version 2 or later\nDistributed with NO WARRANTY, see COPYING for details");
   return FALSE;
 }
 
-static gint mainwin_delete_event(GtkWidget *widget, GdkEvent *event, gpointer data) {
+static gint mainwin_delete_event(G_GNUC_UNUSED GtkWidget *widget, G_GNUC_UNUSED GdkEvent *event, G_GNUC_UNUSED gpointer data) {
   if (netmode) netkill();
   if (grid) free(grid);
   if (invisigrid) free(invisigrid);
@@ -460,7 +460,7 @@ static gint tooldraw_expose_event(GtkWidget *widget, GdkEventExpose *event) {
   return FALSE;
 }
 
-static gint leveldraw_motion_notify_event(GtkWidget *widget, GdkEventButton *event) {
+static gint leveldraw_motion_notify_event(G_GNUC_UNUSED GtkWidget *widget, GdkEventButton *event) {
   int x, y;
   if (dragorigin != PlNowhere) {
     if (event->state & GDK_BUTTON1_MASK) {
@@ -490,7 +490,7 @@ static gint leveldraw_motion_notify_event(GtkWidget *widget, GdkEventButton *eve
   return FALSE;  
 }
 
-static gint draw_leave_notify_event(GtkWidget *widget, GdkEventCrossing *event) {
+static gint draw_leave_notify_event(G_GNUC_UNUSED GtkWidget *widget, G_GNUC_UNUSED GdkEventCrossing *event) {
   /* Because GTK retardedly calls ANOTHER leave when the mouse button is released,
      I must count the number of leaves and entrances.
   */
@@ -506,12 +506,12 @@ static gint draw_leave_notify_event(GtkWidget *widget, GdkEventCrossing *event) 
   return FALSE;
 }
 
-static gint simple_enter_notify_event(GtkWidget *widget, GdkEventCrossing *event) {
+static gint simple_enter_notify_event(G_GNUC_UNUSED GtkWidget *widget, G_GNUC_UNUSED GdkEventCrossing *event) {
   leavecount = 0;
   return FALSE;
 }
 
-static gint draw_enter_notify_event(GtkWidget *widget, GdkEventCrossing *event) {
+static gint draw_enter_notify_event(G_GNUC_UNUSED GtkWidget *widget, G_GNUC_UNUSED GdkEventCrossing *event) {
   leavecount = 0;
   if (dragorigin != PlNowhere) 
     gdk_window_set_cursor(mainwin->window, makecursor(GDK_ICON));
@@ -530,14 +530,14 @@ static gint tooldraw_motion_notify_event(GtkWidget *widget, GdkEventButton *even
   return FALSE;
 }
 */  
-static gint mainwin_button_release_event(GtkWidget *widget, GdkEventButton *event) {
+static gint mainwin_button_release_event(G_GNUC_UNUSED GtkWidget *widget, G_GNUC_UNUSED GdkEventButton *event) {
   if (animmode) return FALSE;
   gdk_window_set_cursor(mainwin->window, makecursor(GDK_LEFT_PTR));
   return FALSE;
 }
 
 
-static gint leveldraw_button_press_event(GtkWidget *widget, GdkEventButton *event) {
+static gint leveldraw_button_press_event(G_GNUC_UNUSED GtkWidget *widget, GdkEventButton *event) {
   unsigned int counter=0;
   static guint32 time=0;
   if (animmode) return FALSE;
@@ -602,7 +602,7 @@ static gint leveldraw_button_press_event(GtkWidget *widget, GdkEventButton *even
   return FALSE;
 }
 
-static gint tooldraw_button_press_event(GtkWidget *widget, GdkEventButton *event) {
+static gint tooldraw_button_press_event(G_GNUC_UNUSED GtkWidget *widget, GdkEventButton *event) {
   if (animmode || checked) return FALSE;
   dragmode = 1;
   dragx = 0; dragy = event->y/pixheight; 
@@ -618,7 +618,7 @@ static gint tooldraw_button_press_event(GtkWidget *widget, GdkEventButton *event
 }
 
 
-static gint leveldraw_button_release_event(GtkWidget *widget, GdkEventButton *event) {
+static gint leveldraw_button_release_event(G_GNUC_UNUSED GtkWidget *widget, GdkEventButton *event) {
   int x = event->x/pixwidth;
   int y = event->y/pixheight;
   if (animmode) return FALSE;
@@ -694,7 +694,7 @@ static gint leveldraw_button_release_event(GtkWidget *widget, GdkEventButton *ev
   return FALSE;
 }
 
-static gint tooldraw_button_release_event(GtkWidget *widget, GdkEventButton *event) {
+static gint tooldraw_button_release_event(G_GNUC_UNUSED GtkWidget *widget, G_GNUC_UNUSED GdkEventButton *event) {
   if (animmode) return FALSE;  
   gdk_window_set_cursor(mainwin->window, makecursor(GDK_LEFT_PTR));
   if (checked || (netmode && (pendack || paralyzed))) {dragorigin = PlNowhere; return FALSE;}

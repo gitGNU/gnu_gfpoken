@@ -245,7 +245,7 @@ int loadlevel(char *filename) { /* Max 80 char width: Max 20 width levels, so A-
   return 1; /* Error */
 }
 
-void filesel_destroy_event(GtkWidget *widget, gpointer data) {
+void filesel_destroy_event(GtkWidget *widget, G_GNUC_UNUSED gpointer data) {
   gtk_grab_remove(widget);
 }
 
@@ -256,7 +256,7 @@ static gint filecancelbutton_clicked(GtkWidget *widget, gpointer data) {
 }
 */
 
-static gint openfileok_button_clicked(GtkWidget *widget, gpointer data) {
+static gint openfileok_button_clicked(G_GNUC_UNUSED GtkWidget *widget, gpointer data) {
   if (loadlevel(gtk_file_selection_get_filename(GTK_FILE_SELECTION(data)))) {
     gamebox("Error", "Could not load file");
     gtk_widget_destroy(data);
@@ -274,7 +274,7 @@ static gint openfileok_button_clicked(GtkWidget *widget, gpointer data) {
   return FALSE;
 }
 
-static gint savefileok_button_clicked(GtkWidget *widget, gpointer data) {
+static gint savefileok_button_clicked(G_GNUC_UNUSED GtkWidget *widget, gpointer data) {
   if (savelevel(gtk_file_selection_get_filename(GTK_FILE_SELECTION(data)))) 
     gamebox("Error", "Could not save level");
   gtk_widget_destroy(data);
@@ -282,7 +282,7 @@ static gint savefileok_button_clicked(GtkWidget *widget, gpointer data) {
 }
 
 
-static gint openbarbut_event(GtkWidget *widget, gpointer data) {
+static gint openbarbut_event(G_GNUC_UNUSED GtkWidget *widget, G_GNUC_UNUSED gpointer data) {
   GtkWidget *filesel = gtk_file_selection_new("Open GFP Game");
   gtk_signal_connect(GTK_OBJECT(filesel), "destroy", (GtkSignalFunc)filesel_destroy_event, filesel);
   gtk_window_set_modal(GTK_WINDOW(filesel), TRUE);
@@ -295,7 +295,7 @@ static gint openbarbut_event(GtkWidget *widget, gpointer data) {
   return FALSE;
 }
 
-static gint savebarbut_event(GtkWidget *widget, gpointer data) {
+static gint savebarbut_event(G_GNUC_UNUSED GtkWidget *widget, G_GNUC_UNUSED gpointer data) {
   GtkWidget *filesel = gtk_file_selection_new("Save GFP Game");
   gtk_signal_connect(GTK_OBJECT(filesel), "destroy", (GtkSignalFunc)filesel_destroy_event, filesel);
   gtk_window_set_modal(GTK_WINDOW(filesel), TRUE);
@@ -308,7 +308,7 @@ static gint savebarbut_event(GtkWidget *widget, gpointer data) {
   return FALSE;
 }
 
-static gint dialogwin_delete_event(GtkWidget *widget, GdkEvent *event, gpointer data) {
+static gint dialogwin_delete_event(G_GNUC_UNUSED GtkWidget *widget, G_GNUC_UNUSED GdkEvent *event, G_GNUC_UNUSED gpointer data) {
   if (netmode) return FALSE;
   if (gamestatus == 0) {
     gtk_main_quit();
@@ -319,7 +319,7 @@ static gint dialogwin_delete_event(GtkWidget *widget, GdkEvent *event, gpointer 
   return TRUE;
 }
 
-static gint cancelbutton_clicked(GtkWidget *widget, gpointer data) {
+static gint cancelbutton_clicked(G_GNUC_UNUSED GtkWidget *widget, G_GNUC_UNUSED gpointer data) {
   if (netmode) return FALSE;
     if (gamestatus == 0) {
     gtk_main_quit();
@@ -332,7 +332,7 @@ static gint cancelbutton_clicked(GtkWidget *widget, gpointer data) {
   return TRUE;
 }
 
-static gint okbutton_clicked(GtkWidget *widget, gpointer data) {
+static gint okbutton_clicked(G_GNUC_UNUSED GtkWidget *widget, G_GNUC_UNUSED gpointer data) {
   int i=0, tempsum=0;
   FILE *configfile;
   char configloc[80]; /* Good Enough */

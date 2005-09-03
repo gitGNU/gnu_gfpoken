@@ -71,7 +71,7 @@ void setstat(char *msg) {
   /* printf("%s\n",msg); */
 }
 
-static gint netok_clicked(GtkWidget *widget, gpointer data) {
+static gint netok_clicked(G_GNUC_UNUSED GtkWidget *widget, G_GNUC_UNUSED gpointer data) {
   int counter=0;
   int connection=0;
   if (netmode) return FALSE;
@@ -117,14 +117,14 @@ static gint netok_clicked(GtkWidget *widget, gpointer data) {
   return FALSE;
 }
 
-static gint netcancel_clicked(GtkWidget *widget, gpointer data) {
+static gint netcancel_clicked(G_GNUC_UNUSED GtkWidget *widget, G_GNUC_UNUSED gpointer data) {
   if (netmode) netkill();
   gtk_widget_hide(netwin);
   gtk_widget_show(mainwin);
   return FALSE;
 }
 
-static gint netwin_delete_event(GtkWidget *widget, GdkEvent *event, gpointer data) {
+static gint netwin_delete_event(G_GNUC_UNUSED GtkWidget *widget, G_GNUC_UNUSED GdkEvent *event, G_GNUC_UNUSED gpointer data) {
   if (netmode) netkill();
   gtk_widget_hide(netwin);
   gtk_widget_show(mainwin);
@@ -309,7 +309,7 @@ void netsend(char type, ...) { /* type, then each arg in turn, i.e.: 'M', x1, y1
   
 }
 
-gint netmonitor(gpointer data, gint source, GdkInputCondition condition) {
+gint netmonitor(G_GNUC_UNUSED gpointer data, G_GNUC_UNUSED gint source, G_GNUC_UNUSED GdkInputCondition condition) {
   char newin[Linelen] = "";
   char *inptr = netin+2;
   int tmp, x, y;
@@ -444,7 +444,7 @@ gint netmonitor(gpointer data, gint source, GdkInputCondition condition) {
 }
 
 
-gint clientmonitor(gpointer data, gint source, GdkInputCondition condition) {
+gint clientmonitor(G_GNUC_UNUSED gpointer data, G_GNUC_UNUSED gint source, G_GNUC_UNUSED GdkInputCondition condition) {
   char newin[Linelen] = "";
   char *st = newin+2;
   int counter=0;
@@ -580,7 +580,7 @@ gint clientmonitor(gpointer data, gint source, GdkInputCondition condition) {
   return TRUE;
 }
 
-gint servermonitor(gpointer data, gint source, GdkInputCondition condition) {
+gint servermonitor(G_GNUC_UNUSED gpointer data, G_GNUC_UNUSED gint source, G_GNUC_UNUSED GdkInputCondition condition) {
   char newin[Linelen] = "";
   int counter = 0;
   switch (read(remotesock, newin, SSIZE_MAX > Linelen-1 ? Linelen-1 : SSIZE_MAX)) {
