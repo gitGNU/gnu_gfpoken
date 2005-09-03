@@ -1,0 +1,112 @@
+0.25 (January 14 2000): A small bug fix.
+* Removed a memory leak reported as Debian bug #50140 by Daniel Burrows.
+* Since my last update, newer versions of GTK have added a mysterious new
+error message to the startup of the game, wherein it will inform you that
+something that shouldn't be realized is, or something that is realized
+shouldn't be.  In any case, the GTK developer that I received e-mail from
+thinks that this is because I'm trying to hook the size allocation signal,
+which I obviously was not, but then I described the error in a rather
+shoddy fashion so I probably deserved a shoddy answer.  If I instead of
+realizing, perform an actual show followed by a hide, I get a different
+error at a different place and I'm treated to a lovely empty window
+popping up as well.  I guess the problem is that I'm trying to attach my
+pixmaps to multiple windows in a cheaty way or something, and really I
+ought to simply use GNOME because everyone else uses it and there's
+probably some #ifdef YOU_ARE_MIGUEL in GTK to allow this sort of stuff.  
+Either that, or perhaps if I actually spent many more hours than I already
+have trying to understand the GTK source code I just might be able to
+figure it out, and get rid of this tiny little entirely non-critical error
+message.  Alternatively, I could use GNOME.  Well, I have for my new game
+Glotski, but nobody seems to be e-mailing about the game except to say
+that they can't get it to work so I'll call it all a bust and leave this
+damn error message here for someone to fix it for me if they want.  I can
+just leave it there and sulk, which is what I am doing for now.  Finally,
+I can whine at the community to fix it for me.  I'll arrange for some sort
+of prize if you do, but only if you manage to explain to me why what you
+did works while what I did does not, as well as why your way could be
+construed as better. The prize will be small and almost but not entirely
+worthless.  As a hint to help start you off, try moving around lines 852
+and 853 in main.c.  Try putting 'em right near the front.
+
+0.24a (July 30 1999): I'm an idiot.  (But you knew that already, right?)
+* Wrong net version in gfp.h and the README.  Duh.  (Thanks William Ono
+for pointing out).  I was afraid I'd do this eventually.
+
+0.24 (July 29 1999): Oh That Magic Build Process.
+* Thanks to the the efforts of Paul Jenner (psj@mustec.eu.org), the game
+now uses an autoconf build process, that is, you use ./configure, then
+make, then make install.
+* Also fixed the folder picture to reflect the current gnome-stock icon.
+
+0.23 (July 22 1999): A couple of fixes, and level save/restore.
+* Yep, level save/restore implemented, complete with bugs, no doubt.  The
+controls are available in the config dialog.  The buttons are a little
+hideous because Tuomas' site was down this morning at 4 AM, so I could
+only find some older version.  Will fix in next release.  Sigh.  Anyone
+chump enough to write a level editor?  The format is extremely simple and
+should be obvious from reading the dialog.c source.  I probably won't
+write one, at least not soon.
+* Should have nailed Debian Bug #41688, reported by Robert Cheramy
+(tibob@via.ecp.fr), which caused a client segfault if you tried to do two
+network games in one session.  (Due to the server not initializing a
+value.)  Thanks to William Ono (wmono@debian.org), package maintainer, for
+not being too terrible in leaning on me to fix it.
+* Should have also fixed minor update bug remaining from board notation.
+* Have realized that the code is hideous.  Feeling great shame.  Will
+hopefully fix it sometime in the future.  Will not call this 1.0 until the
+code looks a lot better.  At least the resulting binary probably isn't
+really horrible.  It does compile cleanly, anyway, on my box at least.  Am
+working on the Other Game, though, right now.  Want to get it
+substantially done before descending back into academia and losing all but
+smidgens of free time.
+
+0.22 (July 13 1999): A couple of small fixes.
+* The board notation stuff had a couple of bugs.  One of them messed up
+network play severely.  Another made the rotation through the pieces a
+little screwy.  These were fixed.
+
+0.21 (July 13 1999): A few tweaks.
+* Dylan Thurston (Dylan.Thurston@math.unige.ch) added a patch to clean up
+the method used to flip back and forth between boards, by modifying one of
+Tuomas' icons and changing the icon used.  Seems like a good solution.
+Dylan also made the adjustors for x and y size have a maximum of 20, as
+100 was a bit large.  I left the version stamp for the config file the
+same, so take care that your board size isn't set obscenely large when you
+start up 0.21 for the first time.
+* Added a method of board notation as reminders to yourself.  Right-click
+(button 3) on a grid square to flip between circle, triangle, square, and
+nothing.  The symbols are intentionally meaningless; come up with your own
+system.  They are not communicated via network play.
+
+0.20 (July 12 1999): MULTIPLAYER!
+* Implemented multiplayer.  Kickass.  They'll all worship me now. Note:
+Still not very tested.  Expect problems.  Should not affect single player
+operation though.
+* Updated README to reflect multiplayer changes.  Still an unreadable
+mess.  Next major version (0.3x) will hopefully be the cleanup version.
+* Fixed a number of minor interface issues.  Things are cleaner now.
+* Added the oft-requested feature to show your guess along with the actual
+board.  (Use the "conversion" button that appears to flip between the
+two.)
+* Fixed a small bug mentioned by Yoni Elhanani (biggo@netvision.net.il)
+involving the resizing of the game window when it shrinks vertically.
+* Fixed a fairly major bug with the help of Mads Dyndesborg
+(madsdyd@challenge.dk) involving the test for equivalence.
+* Still have to clean up the code some, come up with some
+better documentation, etc.
+
+0.12 (June 10 1999): Couple of little bugs fixed.  UNRELEASED.
+* Scott Stanley (god@twistercom.com) mentioned that setting all the
+sliders to 0 would cause an unceremonious crash.  Whoops.
+* Erich Rickheit mentioned that I should be using srandom(), not srand(), 
+to seed random().  Duh.
+
+0.11 (June 9 1999): Small patch to improve portability.
+* Erich Rickheit (rickheit@mirrorimage.net) sent a patch fixing a problem
+that caused GFP to work improperly on non-x86 machines, a pointer
+alignment issue. (A "bug," if you will.)  Thanks, Erich!  Now, it works on
+Sparcs running Solaris.
+
+0.10 (June 1 1999): First release.
+* Fully playable, etc.
+* Some things can be done to fix it up.

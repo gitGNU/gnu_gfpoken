@@ -1,0 +1,33 @@
+Code, text by Martin Hock (oxymoron@cmu.edu)
+[all content except that specified below]
+Copyright 1999-2000 Martin Hock.
+GFP-specific graphics by Jason Reed (godel@cmu.edu) 
+[represented by iconpix.h, marblepix.h, and tilepix.h]
+Copyright 1999 Jason Reed.
+
+Borrowed from GNOME (used with permission of author):
+Button icons by Tuomas Kuosmanen (tigert@gimp.org) downloaded from
+http://tigert.gimp.org/gnome/gnome-stock/
+[represented by barpix.h]
+Copyright 1999 Tuomas Kuosmanen.
+(One icon, picIFlipBack, was created by Dylan Thurston slightly modifying
+the gnome-stock tb_convert.xpm.)
+
+Small patch for 0.11 by:
+Erich Rickheit (rickheit@mirrorimage.net)
+
+Mediumish patch for 0.21 by:
+Dylan Thurston (Dylan.Thurston@math.unige.ch)
+
+Autoconf build for 0.24 by:
+Paul Jenner (psj@mustec.eu.org)
+
+Valiant but unsuccessful attempt to help with stupid "critical" bug by:
+Owen Taylor (otaylor@redhat.com)
+
+Small pieces of code are adapted from:
+_Developing_Linux_Applications_ by Eric Harlow,
+_Beginning_Linux_Programming_ by Neil Matthew and Richard Stones, and
+"GTK v1.2 Tutorial" by Tony Gale and Ian Main.
+(These works all appear to have their code released under the GPL.)
+

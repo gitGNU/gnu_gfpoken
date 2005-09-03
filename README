@@ -1,0 +1,271 @@
+GFingerPoken 0.25 January 14, 2000
+Code, text by Martin Hock (oxymoron@cmu.edu)
+[all content except that specified below]
+Copyright 1999-2000 Martin Hock.
+GFP-specific graphics by Jason Reed (godel@cmu.edu) 
+[represented by iconpix.h, marblepix.h, and tilepix.h]
+Copyright 1999 Jason Reed.
+
+Borrowed from GNOME (used with permission of author):
+Button icons by Tuomas Kuosmanen (tigert@gimp.org) downloaded from
+http://tigert.gimp.org/gnome/gnome-stock/
+[represented by barpix.h]
+Copyright 1999 Tuomas Kuosmanen.
+
+All of this software (i.e. everything in this archive) is distributed
+under the GNU General Public License, version 2 or higher.  It has NO
+WARRANTY.  Please read COPYING for more info.  Stated again in more words:
+
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
+
+
+INTRODUCTION:
+
+Suddenly, you attain consciousness.  You are faced by a grid of tiny
+squares, all alike, and a sign, which reads as follows:
+
+ACHTUNG!  ALLES LOOKENSPEEPERS!
+Das rollenballenmachine ist nicht fuer gefingerpoken und widgetmoven.
+Ist easy flippen der mirrorwerk, losenballen und shovenmirroren mit
+slippensliden.  Ist nicht fuer gewerken bei das dumpkopfen.  Das
+rubbernecken sichtseeren keepen das cotten-pickenen hans in das pockets
+muss; relaxen und watchen das rollenballen.
+
+Unable to decipher it, you begin rolling balls at the grid, having nothing
+better to do. And thus begins your pathetic adventure deep into the bowels
+of Nihilism.
+
+IMPORTANT INFORMATION:
+
+0) Why "GFingerPoken" anyway?  And what was that above narrative all
+about?
+
+See "blinkenlights" in the Jargon File.
+
+1) How does one pronounce "GFingerPoken" properly?
+
+guh-FIN-ger-poh-ken.
+
+Kind of like GNOME ("guh-NOME") or anything else that
+begins with G for that matter.  Free software people are weird.
+
+2) Is this a sanctioned FSF thing?
+
+No.  This is Me (Martin), writing Free Software, so I can pat myself on
+the back repeatedly and hopefully meet chicks.
+
+As an aside, if you are a hot chick in the Pittsburgh area who's into free
+software, send me an e-mail.
+
+NOTE: I do not actually expect any takers.
+
+3) Are you going to continue this Q/A format any longer?
+
+No.  It tires me.
+
+
+I got the idea for this game from a Windows game called "Marble," by
+Analogue Software.  GFingerPoken is basically Marble, rewritten from
+scratch for GTK.  With much better graphics, I might add, due to Jason's
+POV-Ray prowess.  The graphics are what I like best about this game.
+Though now, a close second is the network play.  Yay Network!
+
+
+HOW TO PLAY a one player game:
+
+Start it up.  Marvel at the delicious configuration dialog.  Just click OK
+to continue as the default setup should suffice.  Later you'll want to
+tweak.  (The tweaks you do make will be saved to ~/.gfpoken.)  You can
+also save and restore your game from here.  Restoring is fairly
+straightforward.  To save a game, first one must be in progress.  Simply
+click on the New icon, and then the Save icon, and then save it wherever
+you'd like with the OK button.  You can then Cancel out of the
+Configuration dialog to continue working on the level.  Slightly
+counterintuitive but I thought the icons worked better here than
+cluttering up the main window even more than it already is.
+
+Click around the edges.  You throw in your various balls.  There are 4 of
+them, but they all work the same way.  You'll see your ball roll through
+the empty corridor, then you'll see a white in arrow and an out arrow. 
+Your job is to drag that crap from the side into the maze and set up your
+maze to be the same as the output indicates, i.e., so your ball always
+goes out where the arrow says it should.   You have to use all of the
+stuff on the side.  If an item has a yellow circular indicator, it is
+flippable; click on it, and it will change between its states.
+Furthermore, every time these items are hit within the maze, either yours
+or the computer's, they will be flipped also.  So your maze must be
+synchronized with the invisible one.  Wow, that's pretty damn devious.
+When you think that your maze perfectly matches the output, click the
+check button and see if you were right.
+
+If you right-click on a grid square, you will cycle through a picture
+that appears in the corner: a circle, a triangle, a square, and nothing.
+These symbols do nothing, but you can use them to indicate what you think
+may be in the square.  For example, a circle could mean you think
+nothing is there, a triangle something is there, and a square that you're
+pretty sure whatever's there is right.
+
+Ron Popeil Sez: But Wait, There's More!
+
+Yes, that's right, there are tons of (where "tons of" is defined as 32)
+different objects, ranging from the less annoying to the more annoying.  
+For one low price, you get:
+
+Simple mirrors: The ball rolls toward it.  The ball hits it.  The ball
+rolls in a different direction.  Very simple.  They are shaped / and \ .
+
+Flipping mirrors: The ball hits it and rolls in a different direction, but
+then the mirror changes shape according to its little yellow indicator.
+There are two cycle mirrors which go between / and \ shapes, and four
+cycle mirrors which cycle this way: / o \ o .  (The little "o"
+representing a box, coming up next.)
+
+This is where the game begins to get devious.  Your setup must match the
+functionality of the invisible one exactly.  Meaning you have to get the
+alignment of these precisely perfect.  To change the alignment of one,
+click on it.
+
+Box and sink: Basically they are opposites.  A box will repel the ball in
+the opposite direction that it came from, and a sink will "eat" the ball,
+resulting in NO output arrow.
+
+There is actually one other instance where you can get no output arrow,
+which is when you have a grid so horribly complicated that the ball simply
+goes in the cycle.  When the game detects this (through a nifty little
+structure found in history.c) it will also eat up the ball.  The
+explanation being that if the ball traveled that way for an infinite
+amount of time, it would eventually get worn out and disappear anyway.
+
+Axial mirrors: Though the original game had these, they didn't have a
+separate category.  Anyway, they will let the ball come through on one
+axis (i.e. vertically or horizontally) but bounce it back on the other.
+There are both simple and flipping axial mirrors for your amusement.
+
+Rotators: These are quite similar to normal mirrors, only they redirect
+the ball in a different sort of way.  There are clockwise and
+counterclockwise varieties as well as a flipper.  Strangely, the clockwise
+variety is shaped counterclockwise and vice vera.  See if you can figure
+out why.  Hint: When the ball is coming from the TOP, it is coming in a
+DOWN direction.  Perhaps you will begin to realize what sort of garbage I
+had to deal with while writing this POS.  Perhaps you will then feel
+inclined to send me bits of currency or other tokens of appreciation.
+Contact me via email if you feel moved to perform such an arbitrary act of
+kindness.
+
+One Way Mirrors: Only one order away from pure evil, one way mirrors will
+boggle the mind for centuries if used liberally.  They are just like
+normal static mirrors, only they only let the ball travel right through it
+in two (perpendicular) directions and bounce it off in the other two.
+These can cause an infinite loop if used wrecklessly, which the random
+computer is fairly likely to do.
+
+PURE EVIL: Marked as "Formidable" in the original game, these widgets are
+the terror that lurks inside men's souls.  There are two varieties:
+fllipping one way mirrors, and moving mirrors.  Flipping one way mirrors
+can flip in either a clockwise or counterclockwise direction.  Moving
+mirrors, when hit, will travel one square in the direction they were hit,
+after being hit, so your ball will travel as if a simple mirror had been
+where the mirror was just sitting.
+
+All right, now for the dialog box: "Width" and "Height" dictate the size
+of the grid.  "Density" indicates the overall density of pieces within the
+grid.  "Fuzz" indicates how fuzzy the above Density rating is, i.e. a +/-
+percentage of how much the Density could vary.  So a Fuzz of 10 and a
+Density of 30 would mean that Density will be somewhere between 20 and 40
+percent.  Each individual category has its own density rating, which is
+relative.  For example, two categories set to the same relative density
+(we'll just say 20) will both appear with approximately the same
+frequency.  If one is set to 10 and the other to 20, about 1/3 of the
+pieces will be of the first type and 2/3 of the second type.  Get it?
+Hopefully.  This game ain't for the faint-hearted, as you've probably
+figured out by now.
+
+
+HOW TO PLAY a network game:
+
+First, we'll assume you know how to play a normal one-player game.  We'll
+also assume you have located some opponent, presumably one you will
+obliterate, leaving nothing remaining but a scorched, bloody carcass.  A
+good place to try is Open Projects IRC (opirc.nu), channel #gfpoken,
+though as of this writing this channel does not actually exist in any real
+form.
+
+OK.  Click on the network setup button.  You can leave the type at "Auto"
+unless you've picked out who you want to be client and server.  Auto 
+will try client first, and if it doesn't work it will go to server.  Server
+gets to choose the level layout and also gets to go first, so you could
+give it to your opponent if you want to be nice.  Going first isn't really
+an advantage though, as you'll soon find out.  You should probably leave
+the port unless it's used so it can become a defacto standard.  If you are
+server, the address restricts connections to only ones originating from
+this address; if you are client, it will connect to this address.
+Similarly, server sets the port to listen on and client connects to this
+port.
+
+Also, you'll have to choose the game type.  The server overrides whatever
+the client has.  With "Shared board," both players manipulate the same
+board and both see changes made immediately.  (It's graphically much
+cooler.)  Players take turns manipulating the board.  With "Individual
+boards," each player has his own board and cannot see the other player's
+board.  Players each perform one manipulation to their board
+simultaneously.  Otherwise, the games are similar.
+
+What is a manipulation?  It consists of these steps:
+1) Rearrange the pieces however you'd like.  (This includes moving them in
+and out of the sidebar.)  This may be zero rearrangements.
+2) Perform exactly one test (i.e. click along the border to toss in a
+ball)
+3) Again perform as many rearrangements as you'd like.
+4) Click on the right arrow to indicate that you're done.
+
+Either before or after a manipulation, if the board is potentially
+solvable, you may click the check button if you think it's solved.  If
+you're right, you win; if you're wrong, you lose.
+
+Note that you *must* perform a manipulation during each of your turns,
+which should discourage a standoff in shared board mode.
+
+Also, I don't know if network play is actually fun.  I hope so.  I'm sure
+some nuts out there will like it.  I don't think I'll make any severe
+changes to it as it was way too much work to begin with.  (GFingerPoken is
+now about twice as large in terms of lines of .c source as it was in
+0.11.)
+
+
+OK, that's about everything.  Oh there's probably one last question you
+have.
+
+Q: What's with those weird half-balls that appear as I'm playing?
+
+A: That's your history.  The whole reason for the 4 different ball colors
+is to differentiate your last 4 moves in the history.  So the black in
+arrow superimposed atop the purple ball half should have a corresponding
+black out arrow also superimposed atop a purple ball half.  If not, that
+part of the history must have been erased because another out move went on
+top of it, or perhaps because the ball was eaten somehow and thus never
+came out.  If you're truly anal, you'll keep track of every move on a
+piece of paper.  I just play this game for the hell of it with the default
+settings most of the time.  That's why I didn't include a high score list.
+Well that, and because it's so difficult to rate a level's difficulty.
+Well that, and because I'm a lazy SOB.
+
+All right, I'm out of here.  I live for praise, so if you like this thing
+please mail me at oxymoron@cmu.edu.  And if you find some bugs, go ahead
+and tell me also.
+
+I'm planning to update this thing a little more, clean up the interface a
+bit and hopefully the cruddy code as well.
+
+
