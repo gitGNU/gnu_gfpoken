@@ -1,0 +1,74 @@
+#!/usr/bin/make -f
+#-*- makefile -*-
+# Made with the aid of dh_make, by Craig Small
+# Sample debian/rules that uses debhelper. GNU copyright 1997 by Joey Hess.
+# Some lines taken from debmake, by Christoph Lameter.
+
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+
+configure: configure-stamp
+configure-stamp:
+	dh_testdir
+	autoreconf -i -s -f || autoreconf -i -f
+	./configure --prefix=/usr
+	touch configure-stamp
+
+build: build-stamp
+build-stamp: configure-stamp
+	dh_testdir
+	$(MAKE) CFLAGS="-Wall -W -Werror"
+	touch build-stamp
+
+clean:
+	dh_testdir
+	dh_testroot
+	-rm -f unpack-stamp configure-stamp build-stamp install-stamp
+	-$(MAKE) maintainerclean
+	rm -f Makefile.in aclocal.m4 config.guess config.sub configure \
+		install-sh marblepix.h missing mkinstalldirs tilepix.h
+	dh_clean
+
+install: install-stamp
+install-stamp: build-stamp
+	dh_testdir
+	dh_testroot
+	dh_clean -k
+	dh_installdirs
+	$(MAKE) prefix=$(CURDIR)/debian/tmp/usr \
+		bindir=$(CURDIR)/debian/tmp/usr/games \
+		datadir=$(CURDIR)/debian/tmp/usr/share \
+		mandir=$(CURDIR)/debian/tmp/usr/share/man install
+	mkdir --parents debian/tmp/usr/include/pixmaps
+	cp iconpix.h debian/tmp/usr/include/pixmaps/gfpoken.xpm
+	dh_install --fail-missing
+	touch install-stamp
+
+# Build architecture-independent files here.
+binary-indep: build install
+# We have nothing to do by default.
+
+# Build architecture-dependent files here.
+binary-arch: build install
+	dh_testdir
+	dh_testroot
+	dh_install
+	dh_installdocs
+	dh_installmenu
+	dh_installman debian/gfpoken.6
+	dh_installchangelogs ChangeLog
+	dh_link
+	dh_strip
+	dh_compress
+	dh_fixperms
+	dh_installdeb
+	dh_shlibdeps
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb
+
+source diff:                                                                  
+	@echo >&2 'source and diff are obsolete - use dpkg-source -b'; false
+
+binary: binary-indep binary-arch
+.PHONY: unpack configure build clean binary-indep binary-arch binary

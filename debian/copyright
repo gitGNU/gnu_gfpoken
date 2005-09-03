@@ -1,0 +1,28 @@
+This package was debianized by William Ono <wmono@debian.org> on
+Tue, 1 Jun 1999 22:49:41 -0700.  The first package was of version 0.10
+and was downloaded from http://cantor.res.cmu.edu/~oxymoron/gfpoken/
+
+The latest sources are available at http://fire/cgi-bin/cvsweb/gfpoken/
+The original artwork can be found at http://gfpoken.bigw.org/
+
+Upstream Authors: Martin Hock, Bas Wijnen <shevek@fmf.nl>
+
+Code, text by Martin Hock
+Copyright 1999-2000 Martin Hock.
+Patches by Bas Wijnen are Copyright 2005 Bas Wijnen.
+
+GFP-specific graphics by Jason Reed (godel@cmu.edu)
+[represented by iconpix.h]
+Copyright 1999 Jason Reed.
+
+Borrowed from GNOME (used with permission of author):
+Button icons by Tuomas Kuosmanen (tigert@gimp.org) downloaded from
+http://tigert.gimp.org/gnome/gnome-stock/
+[represented by barpix.h]
+Copyright 1999 Tuomas Kuosmanen.
+
+This software is distributed under the GNU General Public License, version
+2 or higher.  It has NO WARRANTY.
+
+On Debian GNU/Linux systems, the complete text of the GNU General Public
+License can be found in /usr/share/common-licenses/GPL .

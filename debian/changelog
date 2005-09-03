@@ -1,0 +1,129 @@
+gfpoken (0.25.dfsg.1-2) unstable; urgency=low
+
+  * Use %zd for printing sizes. (Closes: #323652)
+  * Let autoreconf copy files if linking fails. (Closes: #323226)
+
+ -- Bas Wijnen <shevek@fmf.nl>  Thu, 23 Aug 2005 09:31:14 +0200
+
+gfpoken (0.25.dfsg.1-1) unstable; urgency=low
+
+  * New maintainer. (Closes: #219061)
+  * Fixed unability to play network games. (Closes: #314543)
+  * Updated to debhelper compatibility level 4
+  * The Gtk warnings don't seem to be reproducible anymore. (Closes: #60830)
+  * Created new artwork in order not to need pov-ray build-dependancy.
+
+ -- Bas Wijnen <shevek@fmf.nl>  Thu, 16 Jun 2005 21:08:04 +0200
+
+gfpoken (0.25-3) unstable; urgency=low
+
+  * Maintainer field set to QA Group
+  * Policy updated
+  * Removed INSTALL file from documentation
+  * Upstream Author(s) -> Author
+  * /usr/doc/copyright changed with /usr/share/common-licenses in
+    debian/copyright
+  * Fixed manpage NAME section
+
+ -- Emanuele Rocca <ema@debian.org>  Thu, 29 Jan 2004 12:04:50 +0100
+
+gfpoken (0.25-2.1) unstable; urgency=low
+
+  * NMU
+  * Rebuild to remove dependency on xlib6g.  Closes: #170202.
+
+ -- Daniel Schepler <schepler@debian.org>  Fri, 14 Mar 2003 02:05:13 -0800
+
+gfpoken (0.25-2) unstable; urgency=low
+
+  * Set Build-Depends in debian/control
+
+ -- William Ono <wmono@debian.org>  Sun, 19 Mar 2000 19:02:56 -0800
+
+gfpoken (0.25-1) frozen unstable; urgency=low
+
+  * New upstream version.  The only change is to fix one small but nasty bug:
+  * Fixes memory leak in 0.24a (Closes: #50140)
+
+ -- William Ono <wmono@debian.org>  Sat, 15 Jan 2000 17:08:36 -0800
+
+gfpoken (0.24a-4) unstable; urgency=low
+
+  * Fixed reference to /usr/doc in gfpoken.6
+
+ -- William Ono <wmono@debian.org>  Fri, 22 Oct 1999 18:34:25 -0700
+
+gfpoken (0.24a-3) unstable; urgency=low
+
+  * Policy: 3.0.1
+
+ -- William Ono <wmono@debian.org>  Thu, 21 Oct 1999 01:30:51 -0700
+
+gfpoken (0.24a-2) unstable; urgency=low
+
+  * debian/rules now correctly copies iconpix.h to gfpoken.xpm
+    (Closes: #43559)
+
+ -- William Ono <wmono@debian.org>  Thu, 26 Aug 1999 13:12:25 -0700
+
+gfpoken (0.24a-1) unstable; urgency=low
+
+  * New upstream version.
+
+ -- William Ono <wmono@debian.org>  Thu, 29 Jul 1999 23:47:29 -0700
+
+gfpoken (0.24-1) unstable; urgency=low
+
+  * New upstream version.
+
+ -- William Ono <wmono@debian.org>  Thu, 29 Jul 1999 22:22:44 -0700
+
+gfpoken (0.23-2) unstable; urgency=low
+
+  * Fixes broken menu entry (Closes: #41816)
+
+ -- William Ono <wmono@debian.org>  Fri, 23 Jul 1999 15:06:13 -0700
+
+gfpoken (0.23-1) unstable; urgency=low
+
+  * New upstream version.
+  * Fixes segmentation fault during network game (upstream)
+    (Closes: #41688)
+
+ -- William Ono <wmono@debian.org>  Thu, 22 Jul 1999 13:53:09 -0700
+
+gfpoken (0.22-1) unstable; urgency=low
+
+  * New upstream version.
+
+ -- William Ono <wmono@debian.org>  Tue, 13 Jul 1999 20:05:41 -0700
+
+gfpoken (0.21-1) unstable; urgency=low
+
+  * New upstream version.
+
+ -- William Ono <wmono@debian.org>  Tue, 13 Jul 1999 02:17:26 -0700
+
+gfpoken (0.20-1) unstable; urgency=low
+
+  * New upstream version.
+  * Can flip between guess and solution at the end of a puzzle (upstream)
+    (Closes: #39779)
+
+ -- William Ono <wmono@debian.org>  Mon, 12 Jul 1999 03:24:12 -0700
+
+gfpoken (0.11-1) unstable; urgency=low
+
+  * New upstream version.
+
+ -- William Ono <wmono@debian.org>  Wed,  9 Jun 1999 23:44:05 -0700
+
+gfpoken (0.10-1) unstable; urgency=low
+
+  * Initial Release.
+
+ -- William Ono <wmono@debian.org>  Tue,  1 Jun 1999 22:49:41 -0700
+
+Local variables:
+mode: debian-changelog
+End:

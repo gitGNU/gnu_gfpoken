@@ -1,0 +1,11 @@
+The original artwork for gfingerpoken has been removed from the debian
+package.  Instead, new art has been created.  The reason for this is that
+the original artwork used pov-ray to be generated.  Pov-ray has a non-free
+license and can therefore not be in Debian.  Packages which need non-free
+packages to build can also not be in it.  There was a choice to make new
+artwork and let the package be in Debian (main), or use the original artwork
+and put it in the contrib section (which technically isn't part of Debian).
+The first option was chosen, hence the package is in the main section.
+
+However, I am not a very good artist, so the new artwork could be improved.
+If you want to do this, please contact me.

@@ -1,0 +1,14 @@
+Source: gfpoken
+Build-Depends: debhelper (>= 4.0.0), libgtk2.0-dev (>= 2.6), automake1.9, gimp, netpbm, bsdmainutils, blender, imagemagick
+Section: games
+Priority: optional
+Maintainer: Bas Wijnen <shevek@fmf.nl>
+Standards-Version: 3.6.2
+
+Package: gfpoken
+Architecture: any
+Depends: ${shlibs:Depends}
+Description: Recreate a grid of mirrors from clues given by tests
+ Send balls through an invisible grid of mirrors (and other interesting
+ widgets) and observe where they end up.  Then, try to recreate the same
+ grid from the results you just obtained.
