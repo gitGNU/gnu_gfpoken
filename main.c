@@ -445,7 +445,14 @@ static gint flipboardsbarbut_event(G_GNUC_UNUSED GtkWidget *widget, G_GNUC_UNUSE
 }  
 
 static gint aboutbarbut_event(G_GNUC_UNUSED GtkWidget *widget, G_GNUC_UNUSED gpointer data) {
-  gamebox("About GFingerPoken","GFingerPoken 0.25 January 14, 2000\nCode by Martin Hock (oxymoron@cmu.edu)\nGame-specific graphics by Jason Reed (godel@cmu.edu)\nToolbar graphics by Tuomas Kuosmanen (tigert@gimp.org) from gnome-stock\nLicensed under the GNU General Public License version 2 or later\nDistributed with NO WARRANTY, see COPYING for details");
+  gamebox(
+    "About GFingerPoken","GFingerPoken 0.26, September 4, 2005\n"
+    "Code by Martin Hock and Bas Wijnen <shevek@fmf.nl>\n"
+    "Maintained by Bas Wijnen <shevek@fmf.nl>\n"
+    "Game-specific graphics by Jason Reed (godel@cmu.edu)\n"
+    "Toolbar graphics by Tuomas Kuosmanen (tigert@gimp.org) from gnome-stock\n"
+    "Licensed under the GNU General Public License version 2 or later\n"
+    "Distributed with NO WARRANTY, see COPYING for details");
   return FALSE;
 }
 
