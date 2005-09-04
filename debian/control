@@ -1,5 +1,5 @@
 Source: gfpoken
-Build-Depends: debhelper (>= 4.0.0), libgtk2.0-dev (>= 2.6), automake1.9, gimp, netpbm, bsdmainutils, blender, imagemagick
+Build-Depends: debhelper (>= 4.0.0), libgtk1.2-dev, automake1.9, gimp, netpbm, bsdmainutils, blender, imagemagick
 Section: games
 Priority: optional
 Maintainer: Bas Wijnen <shevek@fmf.nl>

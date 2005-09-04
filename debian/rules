@@ -23,8 +23,8 @@ build-stamp: configure-stamp
 clean:
 	dh_testdir
 	dh_testroot
-	-rm -f unpack-stamp configure-stamp build-stamp install-stamp
-	-$(MAKE) maintainerclean
+	rm -f unpack-stamp configure-stamp build-stamp install-stamp
+	-$(MAKE) maintainer-clean
 	rm -f Makefile.in aclocal.m4 config.guess config.sub configure \
 		install-sh marblepix.h missing mkinstalldirs tilepix.h
 	dh_clean
