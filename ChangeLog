@@ -1,3 +1,8 @@
+2005-09-07  Bas Wijnen  <shevek@fmf.nl>
+
+	* All files: Updated FSF address in copyright notices, added some
+	notices.
+
 2005-09-03  Bas Wijnen  <shevek@fmf.nl>
 
 	* Dialog.c, main.c, multi.c: Add G_GNUC_UNUSED where appropriate.

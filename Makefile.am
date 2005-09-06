@@ -13,7 +13,8 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+# Foundation, Inc.,
+# 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 bin_PROGRAMS = gfpoken
 
@@ -47,4 +48,15 @@ tilepix.h: art/mirror.xcf art/mktiles
 marblepix.h: art/marbles.blend art/mkmarbles
 	art/mkmarbles
 
-EXTRA_DIST = 
+EXTRA_DIST = \
+	AUTHORS \
+	COPYING \
+	INSTALL \
+	NEWS \
+	README \
+	ChangeLog \
+	art/mirror.xcf \
+	art/marbles.blend \
+	art/mktiles \
+	art/mkmarbles \
+	art/README

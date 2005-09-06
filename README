@@ -1,7 +1,9 @@
 GFingerPoken 0.25 January 14, 2000
-Code, text by Martin Hock and Bas Wijnen <shevek@fmf.nl>
+Code, text by Martin Hock
 [all content except that specified below]
 Copyright 1999-2000 Martin Hock.
+Patches and most art by Bas Wijnen <shevek@fmf.nl>
+Copyright 2005 Bas Wijnen
 GFP-specific graphics by Jason Reed (godel@cmu.edu) 
 [represented by iconpix.h]
 Copyright 1999 Jason Reed.
@@ -28,7 +30,8 @@ WARRANTY.  Please read COPYING for more info.  Stated again in more words:
 
     You should have received a copy of the GNU General Public License
     along with this program; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
+    Foundation, Inc.,
+    51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 
 INTRODUCTION:

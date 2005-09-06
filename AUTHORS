@@ -1,8 +1,11 @@
-Code, text by Martin Hock (oxymoron@cmu.edu)
+Code, text by Martin Hock
 [all content except that specified below]
 Copyright 1999-2000 Martin Hock.
+Patches to the code and all artwork in the art directory
+by Bas Wijnen (shevek@fmf.nl)
+Copyright 2005 Bas Wijnen
 GFP-specific graphics by Jason Reed (godel@cmu.edu) 
-[represented by iconpix.h, marblepix.h, and tilepix.h]
+[represented by iconpix.h]
 Copyright 1999 Jason Reed.
 
 Borrowed from GNOME (used with permission of author):
