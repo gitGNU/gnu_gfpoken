@@ -18,22 +18,18 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+#define PNGDIR DATADIR "/png/"
+
+#include <gdk_imlib.h>
 #include <stdlib.h>  /* For rand */
 #include <string.h>  /* For memcpy */
 #include <stdio.h>   /* Only for printf */
 #include <time.h>    /* For time (seed rand) */
+#include <errno.h>   /* For errno */
 
 #include "gfp.h"     /* Constants and "global" function declarations */
 
 #include "initial.h" /* Initialize global vars */
-
-#include "tilepix.h" /* Lots and lots of graphics */
-#include "borderpix.h"
-#include "arrowpix.h"
-#include "marblepix.h"
-#include "markpix.h"
-#include "barpix.h"
-#include "iconpix.h"
 
 
 extern GtkWidget *dialogwin, *netwin;
@@ -751,95 +747,88 @@ static gint tooldraw_button_release_event(G_GNUC_UNUSED GtkWidget *widget, G_GNU
 
 
 /* Initializers */
-
-#define makepm(a) gdk_pixmap_create_from_xpm_d(mainwin->window, &trashmask, NULL, a)
-#define makemaskpm(a,b) gdk_pixmap_create_from_xpm_d(mainwin->window, &b, NULL, a)
-
-GdkPixmap *makepm2 (unsigned char *buffer)
+GdkPixmap *makemaskpm (const char *file, GdkPixmap **mask)
 {
-  int x, y;
-  GdkPixmap *pixmap = gdk_pixmap_new (mainwin->window, 32, 32, -1);
-  for (y = 0; y < 16; ++y) {
-    for (x = 0; x < 32; ++x) {
-      unsigned char r, g, b;
-      int p = ((y * 32) + x) * 3;
-      int m = (((31 - y) * 32) + x) * 3;
-      r = buffer[p + 2];
-      g = buffer[p + 1];
-      b = buffer[p + 0];
-      buffer[p + 0] = buffer[m + 2];
-      buffer[p + 1] = buffer[m + 1];
-      buffer[p + 2] = buffer[m + 0];
-      buffer[m + 0] = r;
-      buffer[m + 1] = g;
-      buffer[m + 2] = b;
+  GdkImlibImage *im = gdk_imlib_load_image ((char *)file);
+  GdkPixmap *pm;
+  gint w, h;
+  if (!im)
+    {
+      fprintf (stderr, "Unable to load image %s: %s\n", file, strerror (errno));
+      exit (1);
     }
-  }
-  gdk_draw_rgb_image (pixmap, leveldraw->style->fg_gc[GTK_WIDGET_STATE(leveldraw)], 0, 0, 32, 32, GDK_RGB_DITHER_NONE, buffer, 3 * 32);
-  return pixmap;
+  w = im->rgb_width;
+  h = im->rgb_height;
+  gdk_imlib_render (im, w, h);
+  pm = gdk_imlib_move_image (im);
+  if (mask)
+    *mask = gdk_imlib_move_mask (im);
+  return pm;
 }
 
-void initpixmaps() { /* I really should be able to include raw GTK pixmaps, but I don't know of a way to. I have a feeling this is because GTK pixmaps are actually server-side X pixmaps. */
-  gdk_rgb_init();
+#define makepm(file) makemaskpm (file, 0)
+
+void initpixmaps() {
+  /*gdk_rgb_init();*/
   /* Non-masked (solid tile) */
-  tilepic[0] = makepm2(img_00_bg);
-  tilepic[1] = makepm2(img_01_normal);
-  tilepic[2] = makepm2(img_02_normal);
-  tilepic[3] = makepm2(img_03_flip2);
-  tilepic[4] = makepm2(img_04_flip2);
-  tilepic[5] = makepm2(img_05_flip4);
-  tilepic[6] = makepm2(img_06_flip4);
-  tilepic[7] = makepm2(img_07_flip4);
-  tilepic[8] = makepm2(img_08_flip4);
-  tilepic[9] = makepm2(img_09_block);
-  tilepic[10] = makepm2(img_10_sink);
-  tilepic[11] = makepm2(img_11_axial);
-  tilepic[12] = makepm2(img_12_axial);
-  tilepic[13] = makepm2(img_13_axial2);
-  tilepic[14] = makepm2(img_14_axial2);
-  tilepic[15] = makepm2(img_15_rotator);
-  tilepic[16] = makepm2(img_16_rotator);
-  tilepic[17] = makepm2(img_17_rotator2);
-  tilepic[18] = makepm2(img_18_rotator2);
-  tilepic[19] = makepm2(img_19_half);
-  tilepic[20] = makepm2(img_20_half);
-  tilepic[21] = makepm2(img_21_half);
-  tilepic[22] = makepm2(img_22_half);
-  tilepic[23] = makepm2(img_23_half4);
-  tilepic[24] = makepm2(img_24_half4);
-  tilepic[25] = makepm2(img_25_half4);
-  tilepic[26] = makepm2(img_26_half4);
-  tilepic[27] = makepm2(img_27_half4);
-  tilepic[28] = makepm2(img_28_half4);
-  tilepic[29] = makepm2(img_29_half4);
-  tilepic[30] = makepm2(img_30_half4);
-  tilepic[31] = makepm2(img_31_move);
-  tilepic[32] = makepm2(img_32_move);
-  borderpix = makepm(picBorder);
+  tilepic[0] = makepm(PNGDIR "00_bg.png");
+  tilepic[1] = makepm(PNGDIR "01_normal.png");
+  tilepic[2] = makepm(PNGDIR "02_normal.png");
+  tilepic[3] = makepm(PNGDIR "03_flip2.png");
+  tilepic[4] = makepm(PNGDIR "04_flip2.png");
+  tilepic[5] = makepm(PNGDIR "05_flip4.png");
+  tilepic[6] = makepm(PNGDIR "06_flip4.png");
+  tilepic[7] = makepm(PNGDIR "07_flip4.png");
+  tilepic[8] = makepm(PNGDIR "08_flip4.png");
+  tilepic[9] = makepm(PNGDIR "09_block.png");
+  tilepic[10] = makepm(PNGDIR "10_sink.png");
+  tilepic[11] = makepm(PNGDIR "11_axial.png");
+  tilepic[12] = makepm(PNGDIR "12_axial.png");
+  tilepic[13] = makepm(PNGDIR "13_axial2.png");
+  tilepic[14] = makepm(PNGDIR "14_axial2.png");
+  tilepic[15] = makepm(PNGDIR "15_rotator.png");
+  tilepic[16] = makepm(PNGDIR "16_rotator.png");
+  tilepic[17] = makepm(PNGDIR "17_rotator2.png");
+  tilepic[18] = makepm(PNGDIR "18_rotator2.png");
+  tilepic[19] = makepm(PNGDIR "19_half.png");
+  tilepic[20] = makepm(PNGDIR "20_half.png");
+  tilepic[21] = makepm(PNGDIR "21_half.png");
+  tilepic[22] = makepm(PNGDIR "22_half.png");
+  tilepic[23] = makepm(PNGDIR "23_half4.png");
+  tilepic[24] = makepm(PNGDIR "24_half4.png");
+  tilepic[25] = makepm(PNGDIR "25_half4.png");
+  tilepic[26] = makepm(PNGDIR "26_half4.png");
+  tilepic[27] = makepm(PNGDIR "27_half4.png");
+  tilepic[28] = makepm(PNGDIR "28_half4.png");
+  tilepic[29] = makepm(PNGDIR "29_half4.png");
+  tilepic[30] = makepm(PNGDIR "30_half4.png");
+  tilepic[31] = makepm(PNGDIR "31_move.png");
+  tilepic[32] = makepm(PNGDIR "32_move.png");
+  borderpix = makepm(PNGDIR "picBorder.png");
   /* Masked (sprite) */
-  arrowpix[DUp] = makemaskpm(picDUp, arrowmask[DUp]);
-  arrowpix[DRight] = makemaskpm(picDRight, arrowmask[DRight]);
-  arrowpix[DDown] = makemaskpm(picDDown, arrowmask[DDown]);
-  arrowpix[DLeft] = makemaskpm(picDLeft, arrowmask[DLeft]);
-  warrowpix[DUp] = makepm(picDUpW);
-  warrowpix[DRight] = makepm(picDRightW);
-  warrowpix[DDown] = makepm(picDDownW);
-  warrowpix[DLeft] = makepm(picDLeftW);
-  markpix[0] = makemaskpm(picMkCircle, markmask[0]);
-  markpix[1] = makemaskpm(picMkTriangle, markmask[1]);
-  markpix[2] = makemaskpm(picMkSquare, markmask[2]);
-  marblepix = makemaskpm(picMarble, marblemask);
-  iconpix = makemaskpm(picIcon, iconmask);
-  barpix[INew] = makemaskpm(picINew, barmask[INew]);
-  barpix[IStop] = makemaskpm(picIStop, barmask[IStop]);
-  barpix[ICheck] = makemaskpm(picICheck, barmask[ICheck]);
-  barpix[INet] = makemaskpm(picINet, barmask[INet]);
-  barpix[INetTurn] = makemaskpm(picINetTurn, barmask[INetTurn]);
-  barpix[IFlipBoards] = makemaskpm(picIFlipBoards, barmask[IFlipBoards]);
-  barpix[IFlipBack] = makemaskpm(picIFlipBack, barmask[IFlipBack]);
-  barpix[IAbout] = makemaskpm(picIAbout, barmask[IAbout]);
-  barpix[IOpen] = makemaskpm(picIOpen, barmask[IOpen]);
-  barpix[ISave] = makemaskpm(picISave, barmask[ISave]);
+  arrowpix[DUp] = makemaskpm(PNGDIR "picDUp.png", &arrowmask[DUp]);
+  arrowpix[DRight] = makemaskpm(PNGDIR "picDRight.png", &arrowmask[DRight]);
+  arrowpix[DDown] = makemaskpm(PNGDIR "picDDown.png", &arrowmask[DDown]);
+  arrowpix[DLeft] = makemaskpm(PNGDIR "picDLeft.png", &arrowmask[DLeft]);
+  warrowpix[DUp] = makepm(PNGDIR "picDUpW.png");
+  warrowpix[DRight] = makepm(PNGDIR "picDRightW.png");
+  warrowpix[DDown] = makepm(PNGDIR "picDDownW.png");
+  warrowpix[DLeft] = makepm(PNGDIR "picDLeftW.png");
+  markpix[0] = makemaskpm(PNGDIR "picMkCircle.png", &markmask[0]);
+  markpix[1] = makemaskpm(PNGDIR "picMkTriangle.png", &markmask[1]);
+  markpix[2] = makemaskpm(PNGDIR "picMkSquare.png", &markmask[2]);
+  marblepix = makemaskpm(PNGDIR "marbles.png", &marblemask);
+  iconpix = makemaskpm(PNGDIR "gfpoken.png", &iconmask);
+  barpix[INew] = makemaskpm(PNGDIR "picINew.png", &barmask[INew]);
+  barpix[IStop] = makemaskpm(PNGDIR "picIStop.png", &barmask[IStop]);
+  barpix[ICheck] = makemaskpm(PNGDIR "picICheck.png", &barmask[ICheck]);
+  barpix[INet] = makemaskpm(PNGDIR "picINet.png", &barmask[INet]);
+  barpix[INetTurn] = makemaskpm(PNGDIR "picINetTurn.png", &barmask[INetTurn]);
+  barpix[IFlipBoards] = makemaskpm(PNGDIR "picIFlipBoards.png", &barmask[IFlipBoards]);
+  barpix[IFlipBack] = makemaskpm(PNGDIR "picIFlipBack.png", &barmask[IFlipBack]);
+  barpix[IAbout] = makemaskpm(PNGDIR "picIAbout.png", &barmask[IAbout]);
+  barpix[IOpen] = makemaskpm(PNGDIR "picIOpen.png", &barmask[IOpen]);
+  barpix[ISave] = makemaskpm(PNGDIR "picISave.png", &barmask[ISave]);
 }
 
 
@@ -958,13 +947,12 @@ void shownetturn() {
 int main(int argc, char *argv[]) {
   srandom(time(NULL));
   gtk_init(&argc, &argv);
+  gdk_imlib_init ();
+  gtk_widget_push_visual(gdk_imlib_get_visual());
+  gtk_widget_push_colormap(gdk_imlib_get_colormap());
   initmainwin();
   initnetwin();
   initdialog();
   gtk_main();
   return 0;
 }
-
-
-
-

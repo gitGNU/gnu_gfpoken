@@ -1,3 +1,10 @@
+2005-09-08  Bas Wijnen  <shevek@fmf.nl>
+
+	* arrowpix.h, barpix.h, borderpix.h, iconpix.h, markpix.h: Removed.
+	* All files in png/: Added.
+	* Makefile.am, main.c, art/mkmarbles, art/mktiles: Use png graphics
+	instead of xpm.
+
 2005-09-07  Bas Wijnen  <shevek@fmf.nl>
 
 	* All files: Updated FSF address in copyright notices, added some

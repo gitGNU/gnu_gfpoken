@@ -1,3 +1,10 @@
+gfpoken (0.27-1) unstable; urgency=low
+
+  * Added gnome menu entry.
+  * Use automake-1.9, not "any".
+
+ -- Bas Wijnen <shevek@fmf.nl>  Thu,  8 Sep 2005 17:28:34 +0200
+
 gfpoken (0.26-1) unstable; urgency=low
 
   * Use %zd for printing sizes. (Closes: #323652)

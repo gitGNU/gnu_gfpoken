@@ -10,14 +10,19 @@
 configure: configure-stamp
 configure-stamp:
 	dh_testdir
-	autoreconf -i -s -f || autoreconf -i -f
+	aclocal-1.9
+	automake-1.9 -a
+	autoconf
 	./configure --prefix=/usr
 	touch configure-stamp
 
 build: build-stamp
 build-stamp: configure-stamp
 	dh_testdir
-	$(MAKE) CFLAGS="-Wall -W -Werror"
+	$(MAKE) CFLAGS="-ggdb3 -Wall -W -Werror" \
+		prefix=/usr \
+		datadir=/usr/share \
+		pkgdatadir=/usr/share/games/gfpoken
 	touch build-stamp
 
 clean:
@@ -27,7 +32,7 @@ clean:
 	-$(MAKE) maintainer-clean
 	rm -f Makefile.in aclocal.m4 config.guess config.sub configure \
 		install-sh marblepix.h missing mkinstalldirs tilepix.h \
-		depcomp
+		depcomp gfpoken.png
 	dh_clean
 
 install: install-stamp
@@ -39,9 +44,9 @@ install-stamp: build-stamp
 	$(MAKE) prefix=$(CURDIR)/debian/tmp/usr \
 		bindir=$(CURDIR)/debian/tmp/usr/games \
 		datadir=$(CURDIR)/debian/tmp/usr/share \
+		pkgdatadir=$(CURDIR)/debian/tmp/usr/share/games/gfpoken \
 		mandir=$(CURDIR)/debian/tmp/usr/share/man install
-	mkdir --parents debian/tmp/usr/include/pixmaps
-	cp iconpix.h debian/tmp/usr/include/pixmaps/gfpoken.xpm
+	cd debian/tmp/usr/share/pixmaps && convert gfpoken.png gfpoken.xpm
 	dh_install --fail-missing
 	touch install-stamp
 

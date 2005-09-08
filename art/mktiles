@@ -85,31 +85,31 @@ gimp -i -d -f -b - << EOF 2>/dev/null | grep '^ERROR' || :
 )
 
 (show bg)
-(save "00_bg.bmp")
+(save "png/00_bg.png")
 
 (show normal)
-(save "01_normal.bmp")
+(save "png/01_normal.png")
 
 (turncw normal)
-(save "02_normal.bmp")
+(save "png/02_normal.png")
 
 (turnccw normal)
 (show rotation)
-(save "03_flip2.bmp")
+(save "png/03_flip2.png")
 
 (turncw normal)
-(save "04_flip2.bmp")
+(save "png/04_flip2.png")
 
 (hide rotation)
 (turnccw normal)
 (show collapse)
-(save "05_flip4.bmp")
+(save "png/05_flip4.png")
 
 (hide collapse)
 (show expansion)
 (hide normal)
 (show block)
-(save "06_flip4.bmp")
+(save "png/06_flip4.png")
 
 (hide expansion)
 (show collapse)
@@ -117,7 +117,7 @@ gimp -i -d -f -b - << EOF 2>/dev/null | grep '^ERROR' || :
 (show normal)
 (turncw normal)
 (turncw collapse)
-(save "07_flip4.bmp")
+(save "png/07_flip4.png")
 
 (hide collapse)
 (turnccw collapse)
@@ -126,109 +126,96 @@ gimp -i -d -f -b - << EOF 2>/dev/null | grep '^ERROR' || :
 (show expansion)
 (show block)
 (turncw expansion)
-(save "08_flip4.bmp")
+(save "png/08_flip4.png")
 
 (hide expansion)
-(save "09_block.bmp")
+(save "png/09_block.png")
 
 (show sink)
 (hide block)
-(save "10_sink.bmp")
+(save "png/10_sink.png")
 
 (hide sink)
 (show axial)
-(save "11_axial.bmp")
+(save "png/11_axial.png")
 
 (turncw axial)
-(save "12_axial.bmp")
+(save "png/12_axial.png")
 
 (turnccw axial)
 (show rotation)
-(save "13_axial2.bmp")
+(save "png/13_axial2.png")
 
 (turncw axial)
-(save "14_axial2.bmp")
+(save "png/14_axial2.png")
 
 (hide axial)
 (hide rotation)
 (show rotator)
-(save "15_rotator.bmp")
+(save "png/15_rotator.png")
 
 (mirror rotator)
-(save "16_rotator.bmp")
+(save "png/16_rotator.png")
 
 (mirror rotator)
 (show rotation)
-(save "17_rotator2.bmp")
+(save "png/17_rotator2.png")
 
 (mirror rotator)
-(save "18_rotator2.bmp")
+(save "png/18_rotator2.png")
 
 (hide rotator)
 (hide rotation)
 (show half)
-(save "19_half.bmp")
+(save "png/19_half.png")
 
 (turncw half)
 (turncw half)
-(save "20_half.bmp")
+(save "png/20_half.png")
 
 (turncw half)
-(save "21_half.bmp")
+(save "png/21_half.png")
 
 (turncw half)
 (turncw half)
-(save "22_half.bmp")
+(save "png/22_half.png")
 
 (show rotation)
 (turnccw half)
-(save "23_half4.bmp")
+(save "png/23_half4.png")
 
 (turncw half)
-(save "24_half4.bmp")
+(save "png/24_half4.png")
 
 (turncw half)
-(save "25_half4.bmp")
+(save "png/25_half4.png")
 
 (turncw half)
-(save "26_half4.bmp")
+(save "png/26_half4.png")
 
 (mirror rotation)
 (turnccw half)
-(save "27_half4.bmp")
+(save "png/27_half4.png")
 
 (turnccw half)
-(save "28_half4.bmp")
+(save "png/28_half4.png")
 
 (turnccw half)
-(save "29_half4.bmp")
+(save "png/29_half4.png")
 
 (turnccw half)
-(save "30_half4.bmp")
+(save "png/30_half4.png")
 
 (hide half)
 (show normal)
 (hide rotation)
 (show move)
-(save "31_move.bmp")
+(save "png/31_move.png")
 
 (turncw normal)
-(save "32_move.bmp")
+(save "png/32_move.png")
 
 (gimp-quit 1)
 EOF
 
-#pnmcat -lr [0-9][0-9]*.ppm | ppmquant -fs 256 > alltiles.ppm 2>/dev/null
-#pnmcat -lr [0-9][0-9]*.ppm > alltiles.ppm 2>/dev/null
-: > tilepix.h
-#for i in `seq 0 $[$num_tiles-1]` ; do
-	#pnmcut $[$i*$tile_size] 0 $tile_size $tile_size alltiles.ppm \
-		#| ppmtoxpm -name tile`printf %02d $i`_xpm \
-		#>> tilepix.h 2>/dev/null
-#done
-for file in [0-9][0-9]*.bmp ; do
-	echo "unsigned char img_${file%.bmp}[] = { "
-	hexdump -v -s 54 -e '1/1 "0x%02x, "' "$file"
-	echo "0 };"
-done | fold -s >> tilepix.h
-rm [0-9][0-9]*.bmp
+cp png/27_half4.png png/gfpoken.png
