@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=GFingerPoken
+Comment=GFingerPoken logic game
+Exec=gfpoken
+Icon=gfpoken.png
+Terminal=0
+Type=Application
