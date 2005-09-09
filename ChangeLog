@@ -1,3 +1,7 @@
+2005-09-09  Bas Wijnen  <shevek@fmf.nl>
+
+	* Makefile.am, configure.ac: Improved.
+
 2005-09-08  Bas Wijnen  <shevek@fmf.nl>
 
 	* arrowpix.h, barpix.h, borderpix.h, iconpix.h, markpix.h: Removed.

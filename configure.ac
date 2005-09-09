@@ -1,4 +1,4 @@
-# configure.in for GFingerPoken
+# configure.ac for GFingerPoken
 # Copyright 1999-2000  Martin Hock
 # Copyright 2005 Bas Wijnen <shevek@fmf.nl>
 #
@@ -19,14 +19,15 @@
 
 dnl Process this file with autoconf to produce a configure script.
 AC_PREREQ(2.53)
-AC_INIT([gfpoken],[0.26])
+AC_INIT(gfpoken,0.27,[[shevek@fmf.nl]])
 AM_INIT_AUTOMAKE(AC_PACKAGE_NAME, AC_PACKAGE_VERSION)
 
 dnl Checks for programs.
 AC_PROG_CC
 
 dnl Checks for libraries.
-AM_PATH_GTK(1.2.0)
+AM_PATH_GTK(1.2.0,,[AC_MSG_ERROR(Cannot build without Gtk)])
+AM_PATH_GDK_IMLIB(,,[AC_MSG_ERROR(Cannot build without Gtk)])
 
 dnl Checks for header files.
 AC_HEADER_STDC
@@ -37,4 +38,6 @@ dnl Checks for typedefs, structures, and compiler characteristics.
 dnl Checks for library functions.
 AC_CHECK_FUNCS(socket strtol)
 
-AC_OUTPUT(Makefile)
+AC_CONFIG_FILES(Makefile)
+
+AC_OUTPUT

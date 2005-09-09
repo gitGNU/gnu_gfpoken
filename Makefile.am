@@ -18,13 +18,9 @@
 
 bin_PROGRAMS = gfpoken
 
-AM_CFLAGS = @GTK_CFLAGS@ `imlib-config --cflags-gdk`
-
-LDADD = @GTK_LIBS@
-
-AM_CPPFLAGS = -DDATADIR=\"$(pkgdatadir)\"
-
-gfpoken_LDFLAGS = `imlib-config --libs-gdk`
+gfpoken_CPPFLAGS = -DDATADIR=\"$(pkgdatadir)\"
+gfpoken_CFLAGS = @GTK_CFLAGS@ @GDK_IMLIB_CFLAGS@
+gfpoken_LDFLAGS = @GTK_LIBS@ @GDK_IMLIB_LIBS@
 
 gfpoken_SOURCES = \
 	convert.c \

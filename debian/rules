@@ -32,7 +32,7 @@ clean:
 	-$(MAKE) maintainer-clean
 	rm -f Makefile.in aclocal.m4 config.guess config.sub configure \
 		install-sh marblepix.h missing mkinstalldirs tilepix.h \
-		depcomp gfpoken.png
+		depcomp compile
 	dh_clean
 
 install: install-stamp
