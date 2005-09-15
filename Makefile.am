@@ -35,6 +35,8 @@ gfpoken_SOURCES = \
 	graphics.h \
 	initial.h
 
+man_MANS = gfpoken.6
+
 tiles = png/00_bg.png \
 	png/01_normal.png \
 	png/02_normal.png \
@@ -115,12 +117,12 @@ EXTRA_DIST = \
 	INSTALL \
 	NEWS \
 	ChangeLog \
-	gfpoken.6 \
 	art/mirror.xcf \
 	art/marbles.blend \
 	art/mktiles \
 	art/mkmarbles \
 	art/README \
+	$(man_MANS) \
 	$(appicon_DATA) \
 	$(games_DATA) \
 	$(pngs_DATA) \
