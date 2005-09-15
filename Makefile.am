@@ -74,10 +74,10 @@ tiles = png/00_bg.png \
 marbles = png/marbles.png
 
 $(tiles) png/gfpoken.png: art/mirror.xcf art/mktiles
-	art/mktiles
+	$(top_srcdir)/art/mktiles
 
 $(marbles): art/marbles.blend art/mkmarbles
-	art/mkmarbles
+	$(top_srcdir)/art/mkmarbles
 
 appicondir = $(datadir)/pixmaps
 gamesdir = $(datadir)/gnome/apps/Games
@@ -87,7 +87,7 @@ appicon_DATA = png/gfpoken.png
 
 games_DATA = gfpoken.desktop
 
-pngs_DATA = $(tiles) $(marbles) $(appicon_DATA) \
+pngsources = \
 	png/picBorder.png \
 	png/picDDown.png \
 	png/picDDownW.png \
@@ -111,6 +111,12 @@ pngs_DATA = $(tiles) $(marbles) $(appicon_DATA) \
 	png/picMkSquare.png \
 	png/picMkTriangle.png
 
+pngs_DATA = \
+	$(tiles) \
+	$(marbles) \
+	$(appicon_DATA) \
+	$(pngsources)
+
 EXTRA_DIST = \
 	AUTHORS \
 	COPYING \
@@ -122,10 +128,9 @@ EXTRA_DIST = \
 	art/mktiles \
 	art/mkmarbles \
 	art/README \
+	png/README \
 	$(man_MANS) \
-	$(appicon_DATA) \
-	$(games_DATA) \
-	$(pngs_DATA) \
-	$(appicon_DATA)
+	$(pngsources) \
+	$(games_DATA)
 
 CLEANFILES = $(tiles) $(marbles) $(appicon_DATA)

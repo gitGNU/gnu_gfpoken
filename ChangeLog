@@ -4,6 +4,7 @@
 	* README: Changed to dummy version pointing at manual page.
 	* gfpoken.6: New file (based on README).
 	* art/mktiles: Create nicer icon with transparency.
+	* Makefile.am: Let "make distcheck" work.
 
 2005-09-09  Bas Wijnen  <shevek@fmf.nl>
 
