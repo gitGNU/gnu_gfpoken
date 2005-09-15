@@ -114,8 +114,8 @@ EXTRA_DIST = \
 	COPYING \
 	INSTALL \
 	NEWS \
-	README \
 	ChangeLog \
+	gfpoken.6 \
 	art/mirror.xcf \
 	art/marbles.blend \
 	art/mktiles \

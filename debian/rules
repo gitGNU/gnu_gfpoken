@@ -47,7 +47,6 @@ install-stamp: build-stamp
 		pkgdatadir=$(CURDIR)/debian/tmp/usr/share/games/gfpoken \
 		mandir=$(CURDIR)/debian/tmp/usr/share/man install
 	cd debian/tmp/usr/share/pixmaps && convert gfpoken.png gfpoken.xpm
-	dh_install --fail-missing
 	touch install-stamp
 
 # Build architecture-independent files here.
@@ -58,10 +57,10 @@ binary-indep: build install
 binary-arch: build install
 	dh_testdir
 	dh_testroot
-	dh_install
+	dh_install --fail-missing --exclude=gfpoken.6
 	dh_installdocs
 	dh_installmenu
-	dh_installman debian/gfpoken.6
+	dh_installman
 	dh_installchangelogs ChangeLog
 	dh_link
 	dh_strip

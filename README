@@ -1,0 +1,3 @@
+See the manpage for instructions.  When the package is not installed, this can
+be done with
+man ./gfpoken.6

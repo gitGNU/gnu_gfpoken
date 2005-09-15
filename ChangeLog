@@ -1,3 +1,9 @@
+2005-09-15  Bas Wijnen  <shevek@fmf.nl>
+
+	* INSTALL: Removed.
+	* README: Changed to dummy version pointing at manual page.
+	* gfpoken.6: New file (based on README).
+
 2005-09-09  Bas Wijnen  <shevek@fmf.nl>
 
 	* Makefile.am, configure.ac: Improved.
