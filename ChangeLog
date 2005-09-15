@@ -3,6 +3,7 @@
 	* INSTALL: Removed.
 	* README: Changed to dummy version pointing at manual page.
 	* gfpoken.6: New file (based on README).
+	* art/mktiles: Create nicer icon with transparency.
 
 2005-09-09  Bas Wijnen  <shevek@fmf.nl>
 

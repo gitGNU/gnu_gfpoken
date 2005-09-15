@@ -2,8 +2,10 @@ gfpoken (0.27-1) unstable; urgency=low
 
   * Added gnome menu entry.
   * Use automake-1.9, not "any".
+  * Split graphics from executable.
+  * Added real manpage.
 
- -- Bas Wijnen <shevek@fmf.nl>  Thu,  8 Sep 2005 17:28:34 +0200
+ -- Bas Wijnen <shevek@fmf.nl>  Thu, 15 Sep 2005 15:19:34 +0200
 
 gfpoken (0.26-1) unstable; urgency=low
 

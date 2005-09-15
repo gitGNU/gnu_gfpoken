@@ -48,8 +48,11 @@ gimp -i -d -f -b - << EOF 2>/dev/null | grep '^ERROR' || :
 (define (save name)
 	(set! saver (car (gimp-image-duplicate image)))
 	(gimp-image-undo-disable saver)
-	(gimp-image-flatten saver)
-	(gimp-file-save 1 saver (car (gimp-image-get-active-drawable saver)) name name)
+	(set! dummy (car (gimp-layer-copy (car (gimp-image-get-active-layer saver)) 1)))
+	(gimp-image-add-layer saver dummy -1)
+	(gimp-layer-set-opacity dummy 0)
+	(set! savelayer (car (gimp-image-merge-visible-layers saver 0)))
+	(gimp-file-save 1 saver savelayer name name)
 	(gimp-image-delete saver)
 )
 (define (unfloat)
@@ -59,28 +62,22 @@ gimp -i -d -f -b - << EOF 2>/dev/null | grep '^ERROR' || :
 (define (turn layer amount)
 	(set layer (car (gimp-drawable-transform-rotate-simple (use layer) amount 1 0 0 0)))
 	(unfloat)
-	(set! mask (car (gimp-layer-get-mask (use layer))))
-	(cond ((>= mask 0) 
-		(gimp-drawable-transform-rotate-simple mask amount 1 0 0 0)
-	))
-	(unfloat)
 )
 (define (turncw layer) (turn layer 0))
 (define (turnccw layer) (turn layer 2))
 (define (mirror layer)
 	(set layer (car (gimp-drawable-transform-flip-simple (use layer) 0 1 0 0)))
 	(unfloat)
-	(set! mask (car (gimp-layer-get-mask (use layer))))
-	(cond ((>= mask 0) 
-		(gimp-drawable-transform-flip-simple mask 0 1 0 0)
-	))
-	(unfloat)
 )
 
-; set all layers to not visible
+; set all layers to not visible and apply the layer masks
 (set! i 0)
 (while (< i numlayers)
 	(hide i)
+	(set! mask (car (gimp-layer-get-mask (use i))))
+	(cond ((>= mask 0) 
+		(gimp-layer-remove-mask (use i) 0)
+	))
 	(set! i (+ i 1))
 )
 
@@ -96,6 +93,10 @@ gimp -i -d -f -b - << EOF 2>/dev/null | grep '^ERROR' || :
 (turnccw normal)
 (show rotation)
 (save "png/03_flip2.png")
+
+(hide bg)
+(save "png/gfpoken.png")
+(show bg)
 
 (turncw normal)
 (save "png/04_flip2.png")
@@ -217,5 +218,3 @@ gimp -i -d -f -b - << EOF 2>/dev/null | grep '^ERROR' || :
 
 (gimp-quit 1)
 EOF
-
-cp png/27_half4.png png/gfpoken.png
