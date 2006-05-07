@@ -6,6 +6,8 @@
 	* Makefile.am, autogen.sh: Better use of autotools.
 	* Makefile.am: Move .desktop file to new standard location.
 	* main.c: Improve copyright notice.
+	* art/mkmarbles: Don't let blender create files in real home
+	directory.
 
 2005-09-15  Bas Wijnen  <shevek@fmf.nl>
 
