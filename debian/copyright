@@ -14,14 +14,31 @@ Patches by Bas Wijnen are Copyright 2005 Bas Wijnen <shevek@fmf.nl>.
 GFP-specific graphics by Bas Wijnen <shevek@fmf.nl>
 Copyright 2005 Bas Wijnen
 
+Debian packaging
+Copyright 2005-2006 Bas Wijnen <shevek@fmf.nl>
+
 Borrowed from GNOME (used with permission of author):
-Button icons by Tuomas Kuosmanen (tigert@gimp.org) downloaded from
-http://tigert.gimp.org/gnome/gnome-stock/
+Button icons by Tuomas Kuosmanen (tigert@gimp.org)
 [represented by barpix.h]
 Copyright 1999 Tuomas Kuosmanen.
+These icons are licensed under the GNU Lesser General Public License, but for
+this distribution they are relicensed under the GNU General Public License.
 
-This software is distributed under the GNU General Public License, version
-2 or higher.  It has NO WARRANTY.
+-----------------------------------------------------------------------------
 
-On Debian systems, the complete text of the GNU General Public License can be
-found in /usr/share/common-licenses/GPL .
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+
+The complete text of the GNU General Public License can be found in
+/usr/share/common-licenses/GPL .

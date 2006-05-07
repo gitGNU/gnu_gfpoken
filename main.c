@@ -446,10 +446,23 @@ static gint aboutbarbut_event(G_GNUC_UNUSED GtkWidget *widget, G_GNUC_UNUSED gpo
     "About GFingerPoken","GFingerPoken 0.26, September 4, 2005\n"
     "Code by Martin Hock and Bas Wijnen <shevek@fmf.nl>\n"
     "Maintained by Bas Wijnen <shevek@fmf.nl>\n"
-    "Game-specific graphics by Jason Reed (godel@cmu.edu)\n"
     "Toolbar graphics by Tuomas Kuosmanen (tigert@gimp.org) from gnome-stock\n"
-    "Licensed under the GNU General Public License version 2 or later\n"
-    "Distributed with NO WARRANTY, see COPYING for details");
+    "\n"
+    "Copyright Martin Hock, Bas Wijnen, Tuomas Kuosmanen\n"
+    "This program is free software; you can redistribute it and/or\n"
+    "modify it under the terms of the GNU General Public License\n"
+    "as published by the Free Software Foundation; either version 2\n"
+    "of the License, or (at your option) any later version.\n"
+    "\n"
+    "This program is distributed in the hope that it will be useful,\n"
+    "but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
+    "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
+    "GNU General Public License for more details.\n"
+    "\n"
+    "You should have received a copy of the GNU General Public License\n"
+    "along with this program; if not, write to the Free Software\n"
+    "Foundation, Inc.,\n"
+    "51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA\n");
   return FALSE;
 }
 
@@ -832,6 +845,15 @@ void initpixmaps() {
 }
 
 
+static void add_button (int code, const gchar *hint, GtkSignalFunc cb)
+{
+  barpixwid[code] = gtk_pixmap_new(barpix[code], barmask[code]);
+  gtk_widget_show(barpixwid[code]);
+  mainbarbut[code] = gtk_toolbar_append_item(GTK_TOOLBAR(mainbar), NULL, hint,
+		  NULL, barpixwid[code], cb, NULL);
+  gtk_widget_hide(mainbarbut[code]);
+}
+
 void initmainwin() {
   mainwin = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 
@@ -889,49 +911,17 @@ void initmainwin() {
   gtk_widget_realize(mainwin); /* For whatever reason, this line generates the error message:
 Gtk-CRITICAL **: file gtkwindow.c: line 992 (gtk_window_realize): assertion `!GTK_WIDGET_REALIZED (widget)' failed.
 			       */
-  initpixmaps();  
+  initpixmaps();
 
-  barpixwid[INew] = gtk_pixmap_new(barpix[INew], barmask[INew]);
-  gtk_widget_show(barpixwid[INew]);
-  mainbarbut[INew] = gtk_toolbar_append_item(GTK_TOOLBAR(mainbar), NULL, "Generate new level", NULL, barpixwid[INew], (GtkSignalFunc)newbarbut_event, NULL);
-  gtk_widget_show(mainbarbut[INew]);
+  add_button (INew, "Generate new level", (GtkSignalFunc)newbarbut_event);
+  add_button (ICheck, "Check for correctness", (GtkSignalFunc)checkbarbut_event);
+  add_button (INet, "Initiate network game", (GtkSignalFunc)netbarbut_event);
+  add_button (INetTurn, "Complete turn", (GtkSignalFunc)netturnbarbut_event);
+  add_button (IFlipBoards, "Show your guess", (GtkSignalFunc)flipboardsbarbut_event);
+  add_button (IFlipBack, "Show the solution", (GtkSignalFunc)flipboardsbarbut_event);
+  add_button (IAbout, "About GFingerPoken", (GtkSignalFunc)aboutbarbut_event);
+  add_button (IStop, "Terminate network game", (GtkSignalFunc)stopbarbut_event);
 
-  barpixwid[IStop] = gtk_pixmap_new(barpix[IStop], barmask[IStop]);
-  gtk_widget_show(barpixwid[IStop]);
-  mainbarbut[IStop] = gtk_toolbar_append_item(GTK_TOOLBAR(mainbar), NULL, "Terminate network game", NULL, barpixwid[IStop], (GtkSignalFunc)stopbarbut_event, NULL);
-  gtk_widget_hide(mainbarbut[IStop]);
-
-  barpixwid[ICheck] = gtk_pixmap_new(barpix[ICheck], barmask[ICheck]);
-  gtk_widget_show(barpixwid[ICheck]);
-  mainbarbut[ICheck] = gtk_toolbar_append_item(GTK_TOOLBAR(mainbar), NULL, "Check for correctness", NULL, barpixwid[ICheck], (GtkSignalFunc)checkbarbut_event, NULL);
-  gtk_widget_show(mainbarbut[ICheck]);
-
-  barpixwid[INet] = gtk_pixmap_new(barpix[INet], barmask[INet]);
-  gtk_widget_show(barpixwid[INet]);
-  mainbarbut[INet] = gtk_toolbar_append_item(GTK_TOOLBAR(mainbar), NULL, "Initiate network game", NULL, barpixwid[INet], (GtkSignalFunc)netbarbut_event, NULL);
-  gtk_widget_show(mainbarbut[INet]);
-
-  barpixwid[INetTurn] = gtk_pixmap_new(barpix[INetTurn], barmask[INetTurn]);
-  gtk_widget_show(barpixwid[INet]);
-  mainbarbut[INetTurn] = gtk_toolbar_append_item(GTK_TOOLBAR(mainbar), NULL, "Complete turn", NULL, barpixwid[INetTurn], (GtkSignalFunc)netturnbarbut_event, NULL);
-  gtk_widget_hide(mainbarbut[INetTurn]);
-
-  barpixwid[IFlipBoards] = gtk_pixmap_new(barpix[IFlipBoards], barmask[IFlipBoards]);
-  gtk_widget_show(barpixwid[IFlipBoards]);
-  mainbarbut[IFlipBoards] = gtk_toolbar_append_item(GTK_TOOLBAR(mainbar), NULL, "Show your guess", NULL, barpixwid[IFlipBoards], (GtkSignalFunc)flipboardsbarbut_event, NULL);
-  gtk_widget_hide(mainbarbut[IFlipBoards]);
-
-  barpixwid[IFlipBack] = gtk_pixmap_new(barpix[IFlipBack], barmask[IFlipBack]);
-  gtk_widget_show(barpixwid[IFlipBack]);
-  mainbarbut[IFlipBack] = gtk_toolbar_append_item(GTK_TOOLBAR(mainbar), NULL, "Show the solution", NULL, barpixwid[IFlipBack], (GtkSignalFunc)flipboardsbarbut_event, NULL);
-  gtk_widget_hide(mainbarbut[IFlipBack]);
-
-  barpixwid[IAbout] = gtk_pixmap_new(barpix[IAbout], barmask[IAbout]);
-  gtk_widget_show(barpixwid[IAbout]);
-  mainbarbut[IAbout] = gtk_toolbar_append_item(GTK_TOOLBAR(mainbar), NULL, "About GFingerPoken", NULL, barpixwid[IAbout], (GtkSignalFunc)aboutbarbut_event, NULL);
-  gtk_widget_show(mainbarbut[IAbout]);
-
-  
   gdk_window_set_icon(mainwin->window, NULL, iconpix, iconmask);
 }
 

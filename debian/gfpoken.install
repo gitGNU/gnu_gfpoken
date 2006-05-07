@@ -1,5 +1,5 @@
 debian/tmp/usr/games/gfpoken
 debian/tmp/usr/share/games/gfpoken/png/*
-debian/tmp/usr/share/gnome/apps/Games/gfpoken.desktop
+debian/tmp/usr/share/applications/gfpoken.desktop
 debian/tmp/usr/share/pixmaps/gfpoken.png
 debian/tmp/usr/share/pixmaps/gfpoken.xpm

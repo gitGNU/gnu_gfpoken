@@ -7,33 +7,42 @@
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
 
-configure: configure-stamp
-configure-stamp:
-	dh_testdir
-	aclocal-1.9
-	automake-1.9 -a
-	autoconf
-	./configure --prefix=/usr
-	touch configure-stamp
+CFLAGS ?= -ggdb3 -Wall -W -Werror
+CONFIGUREFLAGS ?= --mandir=/usr/share/man --bindir=/usr/games
 
-build: build-stamp
-build-stamp: configure-stamp
-	dh_testdir
-	$(MAKE) CFLAGS="-ggdb3 -Wall -W -Werror" \
-		prefix=/usr \
-		datadir=/usr/share \
-		pkgdatadir=/usr/share/games/gfpoken
-	touch build-stamp
+ifneq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
+	CFLAGS += -O0
+else
+	CFLAGS += -O2
+endif
+
+DEB_HOST_GNU_TYPE ?= $(shell dpkg-architecture -qDEB_HOST_GNU_TYPE)
+DEB_BUILD_GNU_TYPE ?= $(shell dpkg-architecture -qDEB_BUILD_GNU_TYPE)
+
+ifeq ($(DEB_BUILD_GNU_TYPE), $(DEB_HOST_GNU_TYPE))
+	CONFIGUREFLAGS += --build $(DEB_HOST_GNU_TYPE)
+else
+	CONFIGUREFLAGS += --build $(DEB_BUILD_GNU_TYPE) \
+		--host $(DEB_HOST_GNU_TYPE)
+endif
+
 
 clean:
 	dh_testdir
 	dh_testroot
-	rm -f unpack-stamp configure-stamp build-stamp install-stamp
-	-$(MAKE) maintainer-clean
-	rm -f Makefile.in aclocal.m4 config.guess config.sub configure \
-		install-sh marblepix.h missing mkinstalldirs tilepix.h \
-		depcomp compile INSTALL
+	rm -f build-stamp install-stamp
+ifneq (,$(wildcard Makefile))
+	$(MAKE) autoclean
+endif
 	dh_clean
+
+build: build-stamp
+build-stamp:
+	dh_testdir
+	ACLOCAL=aclocal-1.9 AUTOMAKE=automake-1.9 autoreconf -f -i -s
+	./configure --prefix=/usr $(CONFIGUREFLAGS)
+	$(MAKE)
+	touch build-stamp
 
 install: install-stamp
 install-stamp: build-stamp
@@ -41,12 +50,9 @@ install-stamp: build-stamp
 	dh_testroot
 	dh_clean -k
 	dh_installdirs
-	$(MAKE) prefix=$(CURDIR)/debian/tmp/usr \
-		bindir=$(CURDIR)/debian/tmp/usr/games \
-		datadir=$(CURDIR)/debian/tmp/usr/share \
-		pkgdatadir=$(CURDIR)/debian/tmp/usr/share/games/gfpoken \
-		mandir=$(CURDIR)/debian/tmp/usr/share/man install
-	cd debian/tmp/usr/share/pixmaps && pngtopnm gfpoken.png | ppmtoxpm -name icon > gfpoken.xpm
+	$(MAKE) install DESTDIR=$(CURDIR)/debian/tmp
+	cd debian/tmp/usr/share/pixmaps \
+		&& pngtopnm gfpoken.png | ppmtoxpm -name icon > gfpoken.xpm
 	touch install-stamp
 
 # Build architecture-independent files here.
@@ -76,4 +82,4 @@ source diff:
 	@echo >&2 'source and diff are obsolete - use dpkg-source -b'; false
 
 binary: binary-indep binary-arch
-.PHONY: unpack configure build clean binary-indep binary-arch binary
+.PHONY: build clean binary-indep binary-arch binary

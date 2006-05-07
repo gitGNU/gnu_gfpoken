@@ -19,7 +19,7 @@
 
 dnl Process this file with autoconf to produce a configure script.
 AC_PREREQ(2.53)
-AC_INIT(gfpoken,0.27,[[shevek@fmf.nl]])
+AC_INIT(gfpoken,0.28,[[shevek@fmf.nl]])
 AM_INIT_AUTOMAKE(AC_PACKAGE_NAME, AC_PACKAGE_VERSION)
 
 dnl Checks for programs.

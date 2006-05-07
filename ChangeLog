@@ -1,10 +1,18 @@
+2006-05-07  Bas Wijnen  <shevek@fmf.nl>
+
+	* main.c: Change order of buttons to avoid accidental clicking on
+	"terminate network game".
+	* Makefile.am: Don't link to implicit dependencies.
+	* Makefile.am, autogen.sh: Better use of autotools.
+	* Makefile.am: Move .desktop file to new standard location.
+	* main.c: Improve copyright notice.
+
 2005-09-15  Bas Wijnen  <shevek@fmf.nl>
 
 	* INSTALL: Removed.
 	* README: Changed to dummy version pointing at manual page.
 	* gfpoken.6: New file (based on README).
 	* art/mktiles: Create nicer icon with transparency.
-	* Makefile.am: Let "make distcheck" work.
 
 2005-09-09  Bas Wijnen  <shevek@fmf.nl>
 

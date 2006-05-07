@@ -16,11 +16,18 @@
 # Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
+pkgdatadir=$(datadir)/games/@PACKAGE_TARNAME@
+
+AUTOJUNK = INSTALL Makefile.in aclocal.m4 compile configure depcomp \
+	install-sh missing
+
 bin_PROGRAMS = gfpoken
 
 gfpoken_CPPFLAGS = -DDATADIR=\"$(pkgdatadir)\"
 gfpoken_CFLAGS = @GTK_CFLAGS@ @GDK_IMLIB_CFLAGS@
-gfpoken_LDFLAGS = @GTK_LIBS@ @GDK_IMLIB_LIBS@
+# Don't use autoconf substitution here, because it would include
+# implicit dependencies.
+gfpoken_LDFLAGS = -lgtk -lgdk_imlib
 
 gfpoken_SOURCES = \
 	convert.c \
@@ -80,12 +87,12 @@ $(marbles): art/marbles.blend art/mkmarbles
 	$(top_srcdir)/art/mkmarbles
 
 appicondir = $(datadir)/pixmaps
-gamesdir = $(datadir)/gnome/apps/Games
+desktopdir = $(datadir)/applications
 pngsdir = $(pkgdatadir)/png
 
 appicon_DATA = png/gfpoken.png
 
-games_DATA = gfpoken.desktop
+desktop_DATA = gfpoken.desktop
 
 pngsources = \
 	png/picBorder.png \
@@ -118,11 +125,7 @@ pngs_DATA = \
 	$(pngsources)
 
 EXTRA_DIST = \
-	AUTHORS \
-	COPYING \
-	INSTALL \
-	NEWS \
-	ChangeLog \
+	autogen.sh \
 	art/mirror.xcf \
 	art/marbles.blend \
 	art/mktiles \
@@ -131,6 +134,11 @@ EXTRA_DIST = \
 	png/README \
 	$(man_MANS) \
 	$(pngsources) \
-	$(games_DATA)
+	$(desktop_DATA)
 
 CLEANFILES = $(tiles) $(marbles) $(appicon_DATA)
+
+autoclean: maintainer-clean
+ ifneq (,$(wildcard $(AUTOJUNK)))
+	rm $(wildcard $(AUTOJUNK))
+ endif
