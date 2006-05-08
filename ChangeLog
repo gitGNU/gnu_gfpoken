@@ -1,3 +1,7 @@
+2006-05-08  Bas Wijnen  <shevek@fmf.nl>
+
+	* main.c: Fix buttons which weren't shown anymore.
+
 2006-05-07  Bas Wijnen  <shevek@fmf.nl>
 
 	* main.c: Change order of buttons to avoid accidental clicking on

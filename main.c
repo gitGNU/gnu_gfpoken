@@ -845,13 +845,16 @@ void initpixmaps() {
 }
 
 
-static void add_button (int code, const gchar *hint, GtkSignalFunc cb)
+static void add_button (int code, const gchar *hint, GtkSignalFunc cb, int show)
 {
   barpixwid[code] = gtk_pixmap_new(barpix[code], barmask[code]);
   gtk_widget_show(barpixwid[code]);
   mainbarbut[code] = gtk_toolbar_append_item(GTK_TOOLBAR(mainbar), NULL, hint,
 		  NULL, barpixwid[code], cb, NULL);
-  gtk_widget_hide(mainbarbut[code]);
+  if (show)
+  	gtk_widget_show(mainbarbut[code]);
+  else
+  	gtk_widget_hide(mainbarbut[code]);
 }
 
 void initmainwin() {
@@ -913,14 +916,14 @@ Gtk-CRITICAL **: file gtkwindow.c: line 992 (gtk_window_realize): assertion `!GT
 			       */
   initpixmaps();
 
-  add_button (INew, "Generate new level", (GtkSignalFunc)newbarbut_event);
-  add_button (ICheck, "Check for correctness", (GtkSignalFunc)checkbarbut_event);
-  add_button (INet, "Initiate network game", (GtkSignalFunc)netbarbut_event);
-  add_button (INetTurn, "Complete turn", (GtkSignalFunc)netturnbarbut_event);
-  add_button (IFlipBoards, "Show your guess", (GtkSignalFunc)flipboardsbarbut_event);
-  add_button (IFlipBack, "Show the solution", (GtkSignalFunc)flipboardsbarbut_event);
-  add_button (IAbout, "About GFingerPoken", (GtkSignalFunc)aboutbarbut_event);
-  add_button (IStop, "Terminate network game", (GtkSignalFunc)stopbarbut_event);
+  add_button (INew, "Generate new level", (GtkSignalFunc)newbarbut_event, 1);
+  add_button (ICheck, "Check for correctness", (GtkSignalFunc)checkbarbut_event, 0);
+  add_button (INet, "Initiate network game", (GtkSignalFunc)netbarbut_event, 1);
+  add_button (INetTurn, "Complete turn", (GtkSignalFunc)netturnbarbut_event, 0);
+  add_button (IFlipBoards, "Show your guess", (GtkSignalFunc)flipboardsbarbut_event, 0);
+  add_button (IFlipBack, "Show the solution", (GtkSignalFunc)flipboardsbarbut_event, 0);
+  add_button (IAbout, "About GFingerPoken", (GtkSignalFunc)aboutbarbut_event, 1);
+  add_button (IStop, "Terminate network game", (GtkSignalFunc)stopbarbut_event, 0);
 
   gdk_window_set_icon(mainwin->window, NULL, iconpix, iconmask);
 }
