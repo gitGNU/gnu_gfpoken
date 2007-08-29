@@ -1,9 +1,18 @@
+gfpoken (0.30-1) unstable; urgency=low
+
+  * New upstream release.  (Closes: #439492)
+  * License changed to GPL version 3 or later.
+  * Automake dependency upgraded to 1.10.
+
+ -- Bas Wijnen <wijnen@debian.org>  Wed, 29 Aug 2007 23:21:59 +0200
+
 gfpoken (0.29-1) unstable; urgency=low
 
   * New upstream release.
-  * Fix buttons which were not shown anymore.
+  * Fix buttons which were not shown anymore. (Closes: #367495)
+  * Add watch file.
 
- -- Bas Wijnen <shevek@fmf.nl>  Mon,  8 May 2006 10:29:36 +0200
+ -- Bas Wijnen <shevek@fmf.nl>  Tue, 20 Jun 2006 11:40:20 +0200
 
 gfpoken (0.28-1) unstable; urgency=low
 

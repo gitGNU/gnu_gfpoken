@@ -39,7 +39,7 @@ endif
 build: build-stamp
 build-stamp:
 	dh_testdir
-	ACLOCAL=aclocal-1.9 AUTOMAKE=automake-1.9 autoreconf -f -i -s
+	./autogen.sh
 	./configure --prefix=/usr $(CONFIGUREFLAGS)
 	$(MAKE)
 	touch build-stamp

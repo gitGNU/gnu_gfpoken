@@ -1,22 +1,23 @@
 /* main.c - GFingerPoken Main Window, main()
  * Copyright 1999-2000  Martin Hock
- * Copyright 2005  Bas Wijnen <shevek@fmf.nl>
+ * Copyright 2005  Bas Wijnen <wijnen@debian.org>
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
+ * This file is part of Gfingerpoken.
  *
- * This program is distributed in the hope that it will be useful,
+ * Gfingerpoken is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Gfingerpoken is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc.,
- * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 
 #define PNGDIR DATADIR "/png/"
 
@@ -443,26 +444,25 @@ static gint flipboardsbarbut_event(G_GNUC_UNUSED GtkWidget *widget, G_GNUC_UNUSE
 
 static gint aboutbarbut_event(G_GNUC_UNUSED GtkWidget *widget, G_GNUC_UNUSED gpointer data) {
   gamebox(
-    "About GFingerPoken","GFingerPoken 0.26, September 4, 2005\n"
-    "Code by Martin Hock and Bas Wijnen <shevek@fmf.nl>\n"
-    "Maintained by Bas Wijnen <shevek@fmf.nl>\n"
+    "About GFingerPoken","GFingerPoken " VERSION "\n"
+    "Code by Martin Hock and Bas Wijnen <wijnen@debian.org>\n"
+    "Maintained by Bas Wijnen <wijnen@debian.org>\n"
     "Toolbar graphics by Tuomas Kuosmanen (tigert@gimp.org) from gnome-stock\n"
     "\n"
     "Copyright Martin Hock, Bas Wijnen, Tuomas Kuosmanen\n"
-    "This program is free software; you can redistribute it and/or\n"
-    "modify it under the terms of the GNU General Public License\n"
-    "as published by the Free Software Foundation; either version 2\n"
-    "of the License, or (at your option) any later version.\n"
     "\n"
-    "This program is distributed in the hope that it will be useful,\n"
+    "Gfingerpoken is free software; you can redistribute it and/or modify\n"
+    "it under the terms of the GNU General Public License as published by\n"
+    "the Free Software Foundation; either version 3 of the License, or\n"
+    "(at your option) any later version.\n"
+    "\n"
+    "Gfingerpoken is distributed in the hope that it will be useful,\n"
     "but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
     "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
     "GNU General Public License for more details.\n"
     "\n"
     "You should have received a copy of the GNU General Public License\n"
-    "along with this program; if not, write to the Free Software\n"
-    "Foundation, Inc.,\n"
-    "51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA\n");
+    "along with this program.  If not, see <http://www.gnu.org/licenses/>.\n");
   return FALSE;
 }
 

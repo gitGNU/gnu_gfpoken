@@ -1,9 +1,9 @@
 Source: gfpoken
-Build-Depends: debhelper (>= 5.0.0), libgtk1.2-dev, automake1.9, autoconf (>= 2.53), gimp, blender, imagemagick, netpbm, gdk-imlib11-dev
+Build-Depends: debhelper (>= 5.0.0), libgtk1.2-dev, automake1.10, autoconf (>= 2.53), gimp, blender, imagemagick, netpbm, gdk-imlib11-dev
 Section: games
 Priority: optional
-Maintainer: Debian Games Group <pkg-games-devel@lists.alioth.debian.org>
-Uploaders: Bas Wijnen <shevek@fmf.nl>
+Maintainer: Debian Games Team <pkg-games-devel@lists.alioth.debian.org>
+Uploaders: Bas Wijnen <wijnen@debian.org>
 Standards-Version: 3.7.2
 
 Package: gfpoken

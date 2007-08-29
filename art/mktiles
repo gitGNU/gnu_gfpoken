@@ -1,21 +1,22 @@
 #!/bin/bash
 # Make tile pictures for GFingerPoken
-# Copyright 2005  Bas Wijnen <shevek@fmf.nl>
+# Copyright 2005-2007  Bas Wijnen <wijnen@debian.org>
 #
-# This program is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
+# This file is part of Gfingerpoken.
 #
-# This program is distributed in the hope that it will be useful,
+# Gfingerpoken is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3 of the License, or
+# (at your option) any later version.
+#
+# Gfingerpoken is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc.,
-# 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 
 set -e
 
@@ -24,199 +25,216 @@ tile_size=32
 
 if [ ! -d png ] ; then mkdir png ; fi
 
-gimp -i -d -f -b - << EOF 2>/dev/null | grep '^ERROR' || :
-(set! image (car (gimp-file-load 1 "`dirname "$0"`/mirror.xcf" "`dirname "$0"`/mirror.xcf")))
-(set! layers (cadr (gimp-image-get-layers image)))
-(set! expansion 0)
-(set! collapse 1)
-(set! rotation 2)
-(set! move 3)
-(set! rotator 4)
-(set! axial 5)
-(set! sink 6)
-(set! block 7)
-(set! half 8)
-(set! normal 9)
-(set! bg 10)
-(set! numlayers 11)
+gimp -i -d -f -b - << EOF
+(let*
+	(
+		(image (car (gimp-file-load 1 "`dirname "$0"`/mirror.xcf"
+				"`dirname "$0"`/mirror.xcf")))
+		(layers (cadr (gimp-image-get-layers image)))
+		(expansion 0)
+		(collapse 1)
+		(rotation 2)
+		(move 3)
+		(rotator 4)
+		(axial 5)
+		(sink 6)
+		(block 7)
+		(half 8)
+		(normal 9)
+		(bg 10)
+		(numlayers 11)
+	)
 
-(define (use layer) (aref layers layer))
-(define (set layer value)
-	'("new value for layer" layer value)
-	(aset layers layer value)
+	(define (use layer) (aref layers layer))
+	(define (set layer value)
+		'("new value for layer" layer value)
+		(aset layers layer value)
+	)
+	(define (show layer) (gimp-drawable-set-visible (use layer) 1))
+	(define (hide layer) (gimp-drawable-set-visible (use layer) 0))
+	(define (save name)
+		(let* (
+				(saver (car (gimp-image-duplicate image)))
+				(dummy 0)
+				(savelayer 0))
+			(gimp-image-undo-disable saver)
+			(set! dummy (car (gimp-layer-copy (car
+				(gimp-image-get-active-layer saver)) 1)))
+			(gimp-image-add-layer saver dummy -1)
+			(gimp-layer-set-opacity dummy 0)
+			(set! savelayer (car (gimp-image-merge-visible-layers
+				saver 0)))
+			(gimp-file-save 1 saver savelayer name name)
+			(gimp-image-delete saver)
+		)
+	)
+	(define (unfloat)
+		(let* ((float (car (gimp-image-get-floating-sel image))))
+			(cond ((>= float 0) (gimp-floating-sel-anchor float)))
+		)
+	)
+	(define (turn layer amount)
+		(set layer (car (gimp-drawable-transform-rotate-simple
+				(use layer) amount 1 0 0 0)))
+		(unfloat)
+	)
+	(define (turncw layer) (turn layer 0))
+	(define (turnccw layer) (turn layer 2))
+	(define (mirror layer)
+		(set layer (car (gimp-drawable-transform-flip-simple
+				(use layer) 0 1 0 0)))
+		(unfloat)
+	)
+
+	; set all layers to not visible and apply the layer masks
+	(let* ((i 0))
+		(while (< i numlayers)
+			(hide i)
+			(let* ((mask (car (gimp-layer-get-mask (use i)))))
+				(cond ((>= mask 0) 
+					(gimp-layer-remove-mask (use i) 0)
+				))
+			)
+			(set! i (+ i 1))
+		)
+	)
+
+	(show bg)
+	(save "png/00_bg.png")
+
+	(show normal)
+	(save "png/01_normal.png")
+
+	(turncw normal)
+	(save "png/02_normal.png")
+
+	(turnccw normal)
+	(show rotation)
+	(save "png/03_flip2.png")
+
+	(hide bg)
+	(save "png/gfpoken.png")
+	(show bg)
+
+	(turncw normal)
+	(save "png/04_flip2.png")
+
+	(hide rotation)
+	(turnccw normal)
+	(show collapse)
+	(save "png/05_flip4.png")
+
+	(hide collapse)
+	(show expansion)
+	(hide normal)
+	(show block)
+	(save "png/06_flip4.png")
+
+	(hide expansion)
+	(show collapse)
+	(hide block)
+	(show normal)
+	(turncw normal)
+	(turncw collapse)
+	(save "png/07_flip4.png")
+
+	(hide collapse)
+	(turnccw collapse)
+	(hide normal)
+	(turnccw normal)
+	(show expansion)
+	(show block)
+	(turncw expansion)
+	(save "png/08_flip4.png")
+
+	(hide expansion)
+	(save "png/09_block.png")
+
+	(show sink)
+	(hide block)
+	(save "png/10_sink.png")
+
+	(hide sink)
+	(show axial)
+	(save "png/11_axial.png")
+
+	(turncw axial)
+	(save "png/12_axial.png")
+
+	(turnccw axial)
+	(show rotation)
+	(save "png/13_axial2.png")
+
+	(turncw axial)
+	(save "png/14_axial2.png")
+
+	(hide axial)
+	(hide rotation)
+	(show rotator)
+	(save "png/15_rotator.png")
+
+	(mirror rotator)
+	(save "png/16_rotator.png")
+
+	(mirror rotator)
+	(show rotation)
+	(save "png/17_rotator2.png")
+
+	(mirror rotator)
+	(save "png/18_rotator2.png")
+
+	(hide rotator)
+	(hide rotation)
+	(show half)
+	(save "png/19_half.png")
+
+	(turncw half)
+	(turncw half)
+	(save "png/20_half.png")
+
+	(turncw half)
+	(save "png/21_half.png")
+
+	(turncw half)
+	(turncw half)
+	(save "png/22_half.png")
+
+	(show rotation)
+	(turnccw half)
+	(save "png/23_half4.png")
+
+	(turncw half)
+	(save "png/24_half4.png")
+
+	(turncw half)
+	(save "png/25_half4.png")
+
+	(turncw half)
+	(save "png/26_half4.png")
+
+	(mirror rotation)
+	(turnccw half)
+	(save "png/27_half4.png")
+
+	(turnccw half)
+	(save "png/28_half4.png")
+
+	(turnccw half)
+	(save "png/29_half4.png")
+
+	(turnccw half)
+	(save "png/30_half4.png")
+
+	(hide half)
+	(show normal)
+	(hide rotation)
+	(show move)
+	(save "png/31_move.png")
+
+	(turncw normal)
+	(save "png/32_move.png")
+
+	(gimp-image-delete image)
 )
-(define (show layer) (gimp-drawable-set-visible (use layer) 1))
-(define (hide layer) (gimp-drawable-set-visible (use layer) 0))
-(define (save name)
-	(set! saver (car (gimp-image-duplicate image)))
-	(gimp-image-undo-disable saver)
-	(set! dummy (car (gimp-layer-copy (car (gimp-image-get-active-layer saver)) 1)))
-	(gimp-image-add-layer saver dummy -1)
-	(gimp-layer-set-opacity dummy 0)
-	(set! savelayer (car (gimp-image-merge-visible-layers saver 0)))
-	(gimp-file-save 1 saver savelayer name name)
-	(gimp-image-delete saver)
-)
-(define (unfloat)
-	(set! float (car (gimp-image-get-floating-sel image)))
-	(cond ((>= float 0) (gimp-floating-sel-anchor float)))
-)
-(define (turn layer amount)
-	(set layer (car (gimp-drawable-transform-rotate-simple (use layer) amount 1 0 0 0)))
-	(unfloat)
-)
-(define (turncw layer) (turn layer 0))
-(define (turnccw layer) (turn layer 2))
-(define (mirror layer)
-	(set layer (car (gimp-drawable-transform-flip-simple (use layer) 0 1 0 0)))
-	(unfloat)
-)
-
-; set all layers to not visible and apply the layer masks
-(set! i 0)
-(while (< i numlayers)
-	(hide i)
-	(set! mask (car (gimp-layer-get-mask (use i))))
-	(cond ((>= mask 0) 
-		(gimp-layer-remove-mask (use i) 0)
-	))
-	(set! i (+ i 1))
-)
-
-(show bg)
-(save "png/00_bg.png")
-
-(show normal)
-(save "png/01_normal.png")
-
-(turncw normal)
-(save "png/02_normal.png")
-
-(turnccw normal)
-(show rotation)
-(save "png/03_flip2.png")
-
-(hide bg)
-(save "png/gfpoken.png")
-(show bg)
-
-(turncw normal)
-(save "png/04_flip2.png")
-
-(hide rotation)
-(turnccw normal)
-(show collapse)
-(save "png/05_flip4.png")
-
-(hide collapse)
-(show expansion)
-(hide normal)
-(show block)
-(save "png/06_flip4.png")
-
-(hide expansion)
-(show collapse)
-(hide block)
-(show normal)
-(turncw normal)
-(turncw collapse)
-(save "png/07_flip4.png")
-
-(hide collapse)
-(turnccw collapse)
-(hide normal)
-(turnccw normal)
-(show expansion)
-(show block)
-(turncw expansion)
-(save "png/08_flip4.png")
-
-(hide expansion)
-(save "png/09_block.png")
-
-(show sink)
-(hide block)
-(save "png/10_sink.png")
-
-(hide sink)
-(show axial)
-(save "png/11_axial.png")
-
-(turncw axial)
-(save "png/12_axial.png")
-
-(turnccw axial)
-(show rotation)
-(save "png/13_axial2.png")
-
-(turncw axial)
-(save "png/14_axial2.png")
-
-(hide axial)
-(hide rotation)
-(show rotator)
-(save "png/15_rotator.png")
-
-(mirror rotator)
-(save "png/16_rotator.png")
-
-(mirror rotator)
-(show rotation)
-(save "png/17_rotator2.png")
-
-(mirror rotator)
-(save "png/18_rotator2.png")
-
-(hide rotator)
-(hide rotation)
-(show half)
-(save "png/19_half.png")
-
-(turncw half)
-(turncw half)
-(save "png/20_half.png")
-
-(turncw half)
-(save "png/21_half.png")
-
-(turncw half)
-(turncw half)
-(save "png/22_half.png")
-
-(show rotation)
-(turnccw half)
-(save "png/23_half4.png")
-
-(turncw half)
-(save "png/24_half4.png")
-
-(turncw half)
-(save "png/25_half4.png")
-
-(turncw half)
-(save "png/26_half4.png")
-
-(mirror rotation)
-(turnccw half)
-(save "png/27_half4.png")
-
-(turnccw half)
-(save "png/28_half4.png")
-
-(turnccw half)
-(save "png/29_half4.png")
-
-(turnccw half)
-(save "png/30_half4.png")
-
-(hide half)
-(show normal)
-(hide rotation)
-(show move)
-(save "png/31_move.png")
-
-(turncw normal)
-(save "png/32_move.png")
-
 (gimp-quit 1)
 EOF

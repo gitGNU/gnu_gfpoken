@@ -1,20 +1,20 @@
 # Makefile.am for GFingerPoken
-# Copyright 2005  Bas Wijnen <shevek@fmf.nl>
+# Copyright 2005-2007  Bas Wijnen <wijnen@debian.org>
 #
-# This program is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
+# This file is part of Gfingerpoken.
 #
-# This program is distributed in the hope that it will be useful,
+# Gfingerpoken is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3 of the License, or
+# (at your option) any later version.
+#
+# Gfingerpoken is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc.,
-# 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 pkgdatadir=$(datadir)/games/@PACKAGE_TARNAME@
 
@@ -76,23 +76,28 @@ tiles = png/00_bg.png \
 	png/29_half4.png \
 	png/30_half4.png \
 	png/31_move.png \
-	png/32_move.png
+	png/32_move.png \
+	png/gfpoken.png
 
 marbles = png/marbles.png
 
-$(tiles) png/gfpoken.png: art/mirror.xcf art/mktiles
+$(tiles): tiles-stamp
+
+tiles-stamp: art/mirror.xcf art/mktiles
 	$(top_srcdir)/art/mktiles
+	touch $@
 
 $(marbles): art/marbles.blend art/mkmarbles
 	$(top_srcdir)/art/mkmarbles
 
-appicondir = $(datadir)/pixmaps
 desktopdir = $(datadir)/applications
 pngsdir = $(pkgdatadir)/png
 
-appicon_DATA = png/gfpoken.png
-
 desktop_DATA = gfpoken.desktop
+
+install-data-local:
+	mkdir -p $(DESTDIR)$(datadir)/pixmaps
+	ln -s $(pngsdir)/gfpoken.png $(DESTDIR)$(datadir)/pixmaps/
 
 pngsources = \
 	png/picBorder.png \
@@ -121,7 +126,6 @@ pngsources = \
 pngs_DATA = \
 	$(tiles) \
 	$(marbles) \
-	$(appicon_DATA) \
 	$(pngsources)
 
 EXTRA_DIST = \
@@ -136,7 +140,7 @@ EXTRA_DIST = \
 	$(pngsources) \
 	$(desktop_DATA)
 
-CLEANFILES = $(tiles) $(marbles) $(appicon_DATA)
+CLEANFILES = $(tiles) tiles-stamp $(marbles) $(datadir)/pixmaps/gfpoken.png
 
 autoclean: maintainer-clean
  ifneq (,$(wildcard $(AUTOJUNK)))

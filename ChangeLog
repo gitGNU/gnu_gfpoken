@@ -1,3 +1,10 @@
+2007-08-27  Bas Wijnen  <wijnen@debian.org>
+
+	* All files: Change license to GNU General Public License version 3 or
+	later.
+	* art/mktiles: Update to handle new stricter GIMP language rules.
+	* Makefile.am: Call mktiles only once, instead of once per tile.
+
 2006-05-08  Bas Wijnen  <shevek@fmf.nl>
 
 	* main.c: Fix buttons which weren't shown anymore.

@@ -2,16 +2,14 @@ Code, text by Martin Hock
 [all content except that specified below]
 Copyright 1999-2000 Martin Hock.
 Patches to the code and all artwork in the art directory
-by Bas Wijnen (shevek@fmf.nl)
+by Bas Wijnen (wijnen@debian.org)
 Copyright 2005 Bas Wijnen
-GFP-specific graphics by Jason Reed (godel@cmu.edu) 
-[represented by iconpix.h]
+Some graphics by Jason Reed (godel@cmu.edu) 
 Copyright 1999 Jason Reed.
 
 Borrowed from GNOME (used with permission of author):
 Button icons by Tuomas Kuosmanen (tigert@gimp.org) downloaded from
 http://tigert.gimp.org/gnome/gnome-stock/
-[represented by barpix.h]
 Copyright 1999 Tuomas Kuosmanen.
 (One icon, picIFlipBack, was created by Dylan Thurston slightly modifying
 the gnome-stock tb_convert.xpm.)
@@ -33,4 +31,3 @@ _Developing_Linux_Applications_ by Eric Harlow,
 _Beginning_Linux_Programming_ by Neil Matthew and Richard Stones, and
 "GTK v1.2 Tutorial" by Tony Gale and Ian Main.
 (These works all appear to have their code released under the GPL.)
-
