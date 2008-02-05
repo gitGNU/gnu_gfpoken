@@ -6,6 +6,8 @@
 	initial.h, main.c, multi.c: Upgrade to Gtk+2.
 	* gfpoken.desktop: Add information.
 	* png/marbles.png.uu: Add backup in case blender can't be run.
+	* configure.ac: Increment version to 0.31.
+	* Makefile.am: Don't try to remove installed file in clean target.
 
 2007-08-27  Bas Wijnen  <wijnen@debian.org>
 

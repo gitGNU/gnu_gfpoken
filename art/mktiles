@@ -29,7 +29,7 @@ tile_size=32
 
 if [ ! -d png ] ; then mkdir png ; fi
 
-gimp -i -d -f -c -b - << EOF
+gimp --verbose -i -d -f -c -b - << EOF
 (let*
 	(
 		(image (car (gimp-file-load 1 "`dirname "$0"`/mirror.xcf"

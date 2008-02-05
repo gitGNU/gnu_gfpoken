@@ -139,12 +139,12 @@ EXTRA_DIST = \
 	art/mkmarbles \
 	art/README \
 	png/README \
+	png/marbles.png.uu \
 	$(man_MANS) \
 	$(pngsources) \
 	$(desktop_DATA)
 
-CLEANFILES = $(tiles) tiles-stamp $(marbles) marbles-stamp \
-	     $(datadir)/pixmaps/gfpoken.png
+CLEANFILES = $(tiles) tiles-stamp $(marbles) marbles-stamp
 
 autoclean: maintainer-clean
  ifneq (,$(wildcard $(AUTOJUNK)))
