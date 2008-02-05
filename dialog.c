@@ -27,7 +27,7 @@
 
 
 
-GtkWidget *dialogwin, *dialogpack, *dialoggrid;
+GtkWidget *dialogwin, *dialoggrid;
 
 GtkWidget *dialogbar;
 GtkWidget *dialogbarbut[NumDialogIcons];
@@ -169,7 +169,7 @@ void initlevel() { /* Create new level, put it in grid, etc. */
 }
   */
 
-int savelevel(char *filename) {
+int savelevel(const char *filename) {
   FILE *savefile = NULL;
   int x, y=0;
   if ((savefile = fopen(filename,"w"))) { 
@@ -199,7 +199,7 @@ int savelevel(char *filename) {
   return 1; /* Error */
 }
 
-int loadlevel(char *filename) { /* Max 80 char width: Max 20 width levels, so A-OK */
+int loadlevel(const char *filename) { /* Max 80 char width: Max 20 width levels, so A-OK */
   FILE *savefile = NULL;
   char readbuf[80];
   char header[80];
@@ -431,19 +431,18 @@ void initdialog() {
     }
   }
   if (configfile) fclose(configfile);
-  dialogwin = gtk_window_new(GTK_WINDOW_DIALOG);
+  dialogwin = gtk_dialog_new();
   gtk_window_set_title(GTK_WINDOW(dialogwin),"GFP Configuration");
   gtk_signal_connect(GTK_OBJECT(dialogwin), "delete_event", (GtkSignalFunc)dialogwin_delete_event, NULL);
 
-  dialogpack = gtk_vbox_new(FALSE, 0);
-  gtk_container_add(GTK_CONTAINER(dialogwin), dialogpack);
-  gtk_widget_show(dialogpack);
-  dialogbar = gtk_toolbar_new(GTK_ORIENTATION_HORIZONTAL, GTK_TOOLBAR_ICONS);
-  gtk_box_pack_start(GTK_BOX(dialogpack), dialogbar, FALSE, FALSE, 0);
+  dialogbar = gtk_toolbar_new();
+  gtk_toolbar_set_orientation(GTK_TOOLBAR(dialogbar), GTK_ORIENTATION_HORIZONTAL);
+  gtk_toolbar_set_style(GTK_TOOLBAR(dialogbar), GTK_TOOLBAR_ICONS);
+  gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialogwin)->vbox), dialogbar, FALSE, FALSE, 0);
   gtk_widget_show(dialogbar);
 
   dialoggrid = gtk_table_new(2, 5, TRUE);
-  gtk_box_pack_start(GTK_BOX(dialogpack), dialoggrid, FALSE, FALSE, 0);
+  gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialogwin)->vbox), dialoggrid, FALSE, FALSE, 0);
   gtk_widget_show(dialoggrid);
   while (i < NumClasses) {
     classpack[i] = gtk_vbox_new(TRUE, 0);

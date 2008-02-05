@@ -51,8 +51,8 @@ install-stamp: build-stamp
 	dh_clean -k
 	dh_installdirs
 	$(MAKE) install DESTDIR=$(CURDIR)/debian/tmp
-	cd debian/tmp/usr/share/pixmaps \
-		&& pngtopnm gfpoken.png | ppmtoxpm -name icon > gfpoken.xpm
+	pngtopnm debian/tmp/usr/share/games/gfpoken/png/gfpoken.png | \
+		ppmtoxpm -name icon > debian/tmp/usr/share/pixmaps/gfpoken.xpm
 	touch install-stamp
 
 # Build architecture-independent files here.

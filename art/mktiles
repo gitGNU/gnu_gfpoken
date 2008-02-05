@@ -20,12 +20,16 @@
 
 set -e
 
+export HOME="`mktemp -d`"
+export GIMP2_DIRECTORY="$HOME/gimp"
+mkdir --parents $GIMP2_DIRECTORY
+
 num_tiles=33
 tile_size=32
 
 if [ ! -d png ] ; then mkdir png ; fi
 
-gimp -i -d -f -b - << EOF
+gimp -i -d -f -c -b - << EOF
 (let*
 	(
 		(image (car (gimp-file-load 1 "`dirname "$0"`/mirror.xcf"
@@ -44,11 +48,10 @@ gimp -i -d -f -b - << EOF
 		(bg 10)
 		(numlayers 11)
 	)
-
-	(define (use layer) (aref layers layer))
+	(define (use layer) (vector-ref layers layer))
 	(define (set layer value)
 		'("new value for layer" layer value)
-		(aset layers layer value)
+		(vector-set! layers layer value)
 	)
 	(define (show layer) (gimp-drawable-set-visible (use layer) 1))
 	(define (hide layer) (gimp-drawable-set-visible (use layer) 0))
@@ -85,8 +88,6 @@ gimp -i -d -f -b - << EOF
 				(use layer) 0 1 0 0)))
 		(unfloat)
 	)
-
-	; set all layers to not visible and apply the layer masks
 	(let* ((i 0))
 		(while (< i numlayers)
 			(hide i)
@@ -238,3 +239,5 @@ gimp -i -d -f -b - << EOF
 )
 (gimp-quit 1)
 EOF
+
+rm -r "$HOME"

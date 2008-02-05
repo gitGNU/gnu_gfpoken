@@ -21,9 +21,7 @@
 int gamestatus=0; /* 0 = starting, 1 = playing */
 unsigned int dragbuf[DrNum]; /* Draggable buffer for list on right */
 unsigned int bufsize, originalbuf; /* Number of items in buffer */
-obj dragitem = DrNone;
-pos dragorigin = PlNowhere;
-pos dragx, dragy;
+pos buttonx, buttony; /* Location of button press, in tiles.  */
 
 pos gridx = 5, gridy = 4; /* Size of world */
 obj *grid = NULL;
@@ -107,10 +105,6 @@ GdkBitmap *iconmask;
 
 GdkGC *transgc;
 
-
-
 GdkPixmap *levelpixmap = NULL, *toolpixmap = NULL;
-
-
 
 histhash *histkeeper = NULL;

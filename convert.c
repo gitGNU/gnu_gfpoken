@@ -23,13 +23,14 @@
 #include "common.h"
 
 obj bufselect(pos position) {
-  int interiorcounter, objcounter = 0;
-  for (; objcounter < DrNum; objcounter++)
-    for (interiorcounter = dragbuf[objcounter]; interiorcounter > 0; interiorcounter--) {
-      if (position == 0) return objcounter;
-      position--;
-    }
-  return ObNone;
+	int objcounter;
+	for (objcounter = 0; objcounter < DrNum; objcounter++)
+	{
+		if (dragbuf[objcounter] > position)
+			return objcounter;
+		position -= dragbuf[objcounter];
+	}
+	return DrNone;
 }
   
 
@@ -73,6 +74,7 @@ obj nextobj(obj object) {
   case ObEOFCCTURDLMirror:
     return (object - 3);
   default:                 /* Unknown case */
+    fprintf (stderr, "BUG: unknown case in %s\n", __PRETTY_FUNCTION__);
     exit(1);
   }
 }

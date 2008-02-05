@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-pkgdatadir=$(datadir)/games/@PACKAGE_TARNAME@
+pkgdatadir=$(datadir)/games/$(PACKAGE_TARNAME)
 
 AUTOJUNK = INSTALL Makefile.in aclocal.m4 compile configure depcomp \
 	install-sh missing
@@ -24,10 +24,10 @@ AUTOJUNK = INSTALL Makefile.in aclocal.m4 compile configure depcomp \
 bin_PROGRAMS = gfpoken
 
 gfpoken_CPPFLAGS = -DDATADIR=\"$(pkgdatadir)\"
-gfpoken_CFLAGS = @GTK_CFLAGS@ @GDK_IMLIB_CFLAGS@
+gfpoken_CFLAGS = $(GTK2_CFLAGS)
 # Don't use autoconf substitution here, because it would include
 # implicit dependencies.
-gfpoken_LDFLAGS = -lgtk -lgdk_imlib
+gfpoken_LDFLAGS = -lgtk-x11-2.0
 
 gfpoken_SOURCES = \
 	convert.c \
@@ -87,8 +87,11 @@ tiles-stamp: art/mirror.xcf art/mktiles
 	$(top_srcdir)/art/mktiles
 	touch $@
 
-$(marbles): art/marbles.blend art/mkmarbles
-	$(top_srcdir)/art/mkmarbles
+$(marbles): marbles-stamp
+
+marbles-stamp: art/marbles.blend art/mkmarbles
+	$(top_srcdir)/art/mkmarbles || (cd png && uudecode < marbles.png.uu)
+	touch $@
 
 desktopdir = $(datadir)/applications
 pngsdir = $(pkgdatadir)/png
@@ -97,7 +100,7 @@ desktop_DATA = gfpoken.desktop
 
 install-data-local:
 	mkdir -p $(DESTDIR)$(datadir)/pixmaps
-	ln -s $(pngsdir)/gfpoken.png $(DESTDIR)$(datadir)/pixmaps/
+	test -e $(pngsdir)/gfpoken.png || ln -s $(pngsdir)/gfpoken.png $(DESTDIR)$(datadir)/pixmaps/
 
 pngsources = \
 	png/picBorder.png \
@@ -140,7 +143,8 @@ EXTRA_DIST = \
 	$(pngsources) \
 	$(desktop_DATA)
 
-CLEANFILES = $(tiles) tiles-stamp $(marbles) $(datadir)/pixmaps/gfpoken.png
+CLEANFILES = $(tiles) tiles-stamp $(marbles) marbles-stamp \
+	     $(datadir)/pixmaps/gfpoken.png
 
 autoclean: maintainer-clean
  ifneq (,$(wildcard $(AUTOJUNK)))

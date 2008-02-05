@@ -64,7 +64,7 @@ char servmode;
 gint monitortag = -1;
 gint accepttag = -1;
 
-GtkWidget *netwin, *netpack, *netgrid, *netstatbar;
+GtkWidget *netwin, *netgrid, *netstatbar;
 GtkWidget *netlframe, *netrframe;
 GtkWidget *netlpack, *netrpack, *netstatpack, *netbutpack;
 GtkWidget *netlrad[3], *netrrad[2];
@@ -80,7 +80,7 @@ extern GtkWidget *mainstatbar;
 
 extern GtkWidget *dialogbarbut[NumDialogIcons];
 
-int initnet(int type, char *hostname, char *port);
+int initnet(int type, const char *hostname, const char *port);
 
 void setstat(char *msg) {
   gtk_statusbar_pop(GTK_STATUSBAR(netstatbar), netstatmsg);
@@ -149,16 +149,13 @@ static gint netwin_delete_event(G_GNUC_UNUSED GtkWidget *widget, G_GNUC_UNUSED G
 }
 
 void initnetwin() {
-  netwin = gtk_window_new(GTK_WINDOW_DIALOG);
+  netwin = gtk_dialog_new();
   gtk_window_set_title(GTK_WINDOW(netwin), "GFP Network Game");
-  netpack = gtk_vbox_new(FALSE, 0);
-  gtk_container_add(GTK_CONTAINER(netwin), netpack);
-  gtk_widget_show(netpack);
   netgrid = gtk_table_new(6, 3, FALSE);
   gtk_widget_show(netgrid);
-  gtk_box_pack_start(GTK_BOX(netpack), netgrid, TRUE, TRUE, 0);
+  gtk_box_pack_start(GTK_BOX(GTK_DIALOG(netwin)->vbox), netgrid, TRUE, TRUE, 0);
   netstatbar = gtk_statusbar_new();
-  gtk_box_pack_start(GTK_BOX(netpack), netstatbar, TRUE, TRUE, 0);
+  gtk_box_pack_start(GTK_BOX(GTK_DIALOG(netwin)->vbox), netstatbar, TRUE, TRUE, 0);
   gtk_widget_show(netstatbar);
   netstatmsg = gtk_statusbar_get_context_id(GTK_STATUSBAR(netstatbar), "Network Status");
   gtk_statusbar_push(GTK_STATUSBAR(netstatbar), netstatmsg, "Ready");
@@ -399,20 +396,19 @@ gint netmonitor(G_GNUC_UNUSED gpointer data, G_GNUC_UNUSED gint source, G_GNUC_U
     bardraw();
     break;
   case 'T': /* Test */
-    dragx = strtol(inptr, &inptr, 10);
-    dragy = strtol(inptr, &inptr, 10);
+    buttonx = strtol(inptr, &inptr, 10);
+    buttony = strtol(inptr, &inptr, 10);
     /* Copied from leveldraw_button_press_event */
     for (; counter < histsize; counter++)
-      if (arrinx[counter] == dragx && arriny[counter] == dragy) arrinused[counter]=0;
+      if (arrinx[counter] == buttonx && arriny[counter] == buttony) arrinused[counter]=0;
     
-    arrinx[arrhistptr] = dragx;
-    arriny[arrhistptr] = dragy;
-    if (dragx == 0) animdir = DRight;
-    if (dragy == 0) animdir = DDown;
-    if (dragx == gridx + 1) animdir = DLeft;
-    if (dragy == gridy + 1) animdir = DUp;
+    arrinx[arrhistptr] = buttonx;
+    arriny[arrhistptr] = buttony;
+    if (buttonx == 0) animdir = DRight;
+    if (buttony == 0) animdir = DDown;
+    if (buttonx == gridx + 1) animdir = DLeft;
+    if (buttony == gridy + 1) animdir = DUp;
     arrindir[arrhistptr]=animdir;
-    dragorigin = PlNowhere;
     gdk_window_set_cursor(mainwin->window, gdk_cursor_new(GDK_WATCH));
     animmode = 1;
     borderdraw();
@@ -718,7 +714,7 @@ gint accept_loop_timeout(G_GNUC_UNUSED gpointer data) {
   return FALSE;
 }
 
-int initnet(int type, char *hostname, char *port) { /* Return: 1 if successful, 0 if unsuccessful */
+int initnet(int type, const char *hostname, const char *port) { /* Return: 1 if successful, 0 if unsuccessful */
   struct hostent *hoststuff = NULL;
   int flags;
   switch (type) {

@@ -15,6 +15,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-export AUTOMAKE=automake-1.10
+export AUTOMAKE="automake-1.10 --foreign"
 export ACLOCAL=aclocal-1.10
 autoreconf --install --force --symlink

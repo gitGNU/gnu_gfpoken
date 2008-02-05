@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <gtk/gtk.h> /* The Gee! I wonder why they implemented it that way Toolkit */
+#include <gtk/gtk.h>
 
 /* Typedefs */
 typedef unsigned int obj;
@@ -235,6 +235,3 @@ void initnetwin();
 void netsend(char type, ...);
 void netkill();
 void setstat(char *msg);
-
-
-

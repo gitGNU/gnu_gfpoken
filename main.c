@@ -21,7 +21,6 @@
 
 #define PNGDIR DATADIR "/png/"
 
-#include <gdk_imlib.h>
 #include <stdlib.h>  /* For rand */
 #include <string.h>  /* For memcpy */
 #include <stdio.h>   /* Only for printf */
@@ -35,12 +34,13 @@
 
 extern GtkWidget *dialogwin, *netwin;
 
-int dragmode = 0;
 int leavecount = 0;
 
 
 guint mainstatmsg;
 
+static gchar target_name[] = "mirror";
+static GtkTargetEntry targets[1] = { target_name, GTK_TARGET_SAME_APP, 0};
 
 /* Helper functions */
 void mainsetstat(char *msg) {
@@ -67,7 +67,7 @@ gint anim_loop_timeout(G_GNUC_UNUSED gpointer data) { /* Writes directly to scre
     evalret = RetNormal; /* To prevent false signal */
     animmode = 2;
     animframe = 0; /* Only the very first frame is 0. */
-    animx = dragx*pixwidth; animy = dragy*pixheight;
+    animx = buttonx*pixwidth; animy = buttony*pixheight;
     animsrcdir = animdir;
     oldanimx = 0; oldanimy = 0;
     outx = 0; outy = 0;
@@ -493,95 +493,19 @@ static gint tooldraw_expose_event(GtkWidget *widget, GdkEventExpose *event) {
   return FALSE;
 }
 
-static gint leveldraw_motion_notify_event(G_GNUC_UNUSED GtkWidget *widget, GdkEventButton *event) {
-  int x, y;
-  if (dragorigin != PlNowhere) {
-    if (event->state & GDK_BUTTON1_MASK) {
-      x = event->x/pixwidth;
-      y = event->y/pixwidth;
-      /* if ((event->x < 0) || (event->x >= widget->allocation.width) || 
-	  (event->y < 0) || (event->y >= widget->allocation.height)) return FALSE; */
-      if ((x - 1 == dragx) && (y - 1 == dragy) && dragorigin == PlLevel && dragmode == 0) 
-	gdk_window_set_cursor(mainwin->window, makecursor(GDK_LEFT_PTR));
-      else {
-	dragmode = 1;
-	if ((x > 0) && (x < gridx+1) && (y > 0) && (y < gridy+1))
-	  if (grid[x-1+gridx*(y-1)] != ObNone) 
-	    gdk_window_set_cursor(mainwin->window, makecursor(GDK_X_CURSOR));
-	  else
-	    gdk_window_set_cursor(mainwin->window, makecursor(GDK_ICON));
-	else if ((((x == 0) || (x == gridx+1)) && (y >= 0) && (y <= gridy+1)) || 
-		 (((y == 0) || (y == gridy+1)) && (x >= 0) && (x <= gridx+1))) 
-	gdk_window_set_cursor(mainwin->window, makecursor(GDK_X_CURSOR)); 
-      }
-    }
-    else {
-      gdk_window_set_cursor(mainwin->window, makecursor(GDK_LEFT_PTR));
-      dragorigin = PlNowhere;
-    }
-  }
-  return FALSE;  
-}
-
-static gint draw_leave_notify_event(G_GNUC_UNUSED GtkWidget *widget, G_GNUC_UNUSED GdkEventCrossing *event) {
-  /* Because GTK retardedly calls ANOTHER leave when the mouse button is released,
-     I must count the number of leaves and entrances.
-  */
-  leavecount++;
-  if (dragorigin != PlNowhere) {
-    if (leavecount == 1)
-      gdk_window_set_cursor(mainwin->window, makecursor(GDK_X_CURSOR));
-    else {
-      gdk_window_set_cursor(mainwin->window, makecursor(GDK_LEFT_PTR));
-      dragorigin = PlNowhere;
-    }
-  }
-  return FALSE;
-}
-
-static gint simple_enter_notify_event(G_GNUC_UNUSED GtkWidget *widget, G_GNUC_UNUSED GdkEventCrossing *event) {
-  leavecount = 0;
-  return FALSE;
-}
-
-static gint draw_enter_notify_event(G_GNUC_UNUSED GtkWidget *widget, G_GNUC_UNUSED GdkEventCrossing *event) {
-  leavecount = 0;
-  if (dragorigin != PlNowhere) 
-    gdk_window_set_cursor(mainwin->window, makecursor(GDK_ICON));
-  return FALSE;
-}
-
-
-/*
-static gint tooldraw_motion_notify_event(GtkWidget *widget, GdkEventButton *event) {
-  int x;
-  if ((event->state & GDK_BUTTON1_MASK) && (dragorigin != PlNowhere)) {
-    x = event->x/pixwidth;
-    if ((x != 0) || (event->y < 0) || (event->y >= widget->allocation.height)) return FALSE;
-    gdk_window_set_cursor(mainwin->window, makecursor(GDK_ICON));
-  }
-  return FALSE;
-}
-*/  
-static gint mainwin_button_release_event(G_GNUC_UNUSED GtkWidget *widget, G_GNUC_UNUSED GdkEventButton *event) {
-  if (animmode) return FALSE;
-  gdk_window_set_cursor(mainwin->window, makecursor(GDK_LEFT_PTR));
-  return FALSE;
-}
-
-
 static gint leveldraw_button_press_event(G_GNUC_UNUSED GtkWidget *widget, GdkEventButton *event) {
-  unsigned int counter=0;
+  unsigned int counter;
   static guint32 time=0;
   if (animmode) return FALSE;
-  dragmode = 0;
-  dragx = event->x/pixwidth; dragy = event->y/pixheight; 
+  buttonx = event->x/pixwidth; buttony = event->y/pixheight; 
 
-  if (((dragx == 0) + (dragy == 0) + (dragx == gridx + 1) + (dragy == gridy + 1)) == 1) { /* i.e. one is true */
+  if (((buttonx == 0) + (buttony == 0) + (buttonx == gridx + 1)
+			  + (buttony == gridy + 1)) == 1) // i.e. one is true
+  {
     if (netmode) {
       if (paralyzed || completed || pendack) return FALSE;
       else {
-	if (category == CatShared) netsend('T', dragx, dragy);
+	if (category == CatShared) netsend('T', buttonx, buttony);
 	else {
 	  if (opponentdone) mainsetstat("Finish up - Opponent is done");
 	  else mainsetstat("Finish up - Opponent is not done");
@@ -590,16 +514,16 @@ static gint leveldraw_button_press_event(G_GNUC_UNUSED GtkWidget *widget, GdkEve
 	completed = 1;
       }
     }
-    for (; counter < histsize; counter++)
-      if (arrinx[counter] == dragx && arriny[counter] == dragy) arrinused[counter]=0;
-    arrinx[arrhistptr] = dragx;
-    arriny[arrhistptr] = dragy;
-    if (dragx == 0) animdir = DRight;
-    if (dragy == 0) animdir = DDown;
-    if (dragx == gridx + 1) animdir = DLeft;
-    if (dragy == gridy + 1) animdir = DUp;
+    for (counter = 0; counter < histsize; counter++)
+      if (arrinx[counter] == buttonx && arriny[counter] == buttony)
+	      arrinused[counter]=0;
+    arrinx[arrhistptr] = buttonx;
+    arriny[arrhistptr] = buttony;
+    if (buttonx == 0) animdir = DRight;
+    if (buttony == 0) animdir = DDown;
+    if (buttonx == gridx + 1) animdir = DLeft;
+    if (buttony == gridy + 1) animdir = DUp;
     arrindir[arrhistptr]=animdir;
-    dragorigin = PlNowhere;
     gdk_window_set_cursor(mainwin->window, makecursor(GDK_WATCH));
     animmode = 1;
     /* Clear perimeter */
@@ -613,169 +537,234 @@ static gint leveldraw_button_press_event(G_GNUC_UNUSED GtkWidget *widget, GdkEve
     return FALSE;
   }
   if (checked) return FALSE;
-  if ((((dragx <= 0) || (dragx >= gridx+1)) && ((dragy <= 0) || (dragy >= gridy+1))) || 
-      ((grid[(--dragx) + (--dragy)*gridx] == ObNone) && event->button != 3)) { /* if invalid */
-    dragorigin = PlNowhere;
+  if ((((buttonx <= 0) || (buttonx >= gridx+1)) && ((buttony <= 0) || (buttony >= gridy+1))) || 
+      ((grid[(--buttonx) + (--buttony)*gridx] == ObNone) && event->button != 3)) { /* if invalid */
     gdk_window_set_cursor(mainwin->window, makecursor(GDK_LEFT_PTR));
     return FALSE;
   }
 
   if (event->button == 3 && time != event->time) {
-    if (markgrid[dragx+dragy*gridx] == NumMarks) markgrid[dragx+dragy*gridx] = MkNone;
-    else markgrid[dragx+dragy*gridx]++;
-    drawtile(dragx, dragy);
-    dragorigin = PlNowhere;
+    if (markgrid[buttonx+buttony*gridx] == NumMarks) markgrid[buttonx+buttony*gridx] = MkNone;
+    else markgrid[buttonx+buttony*gridx]++;
+    drawtile(buttonx, buttony);
     time = event->time;
     return FALSE;
   }
 
-  dragitem = grid[dragx+dragy*gridx];
-  dragorigin = PlLevel;
   /*  gdk_window_set_cursor(mainwin->window, makecursor(GDK_ICON)); */
   return FALSE;
 }
 
-static gint tooldraw_button_press_event(G_GNUC_UNUSED GtkWidget *widget, GdkEventButton *event) {
-  if (animmode || checked) return FALSE;
-  dragmode = 1;
-  dragx = 0; dragy = event->y/pixheight; 
-  if (dragy >= (int)bufsize) {
-    dragorigin = PlNowhere;
-    gdk_window_set_cursor(mainwin->window, makecursor(GDK_LEFT_PTR));
-    return FALSE;
-  }
-  dragitem = bufselect(dragy);
-  dragorigin = PlToolbar;
-  gdk_window_set_cursor(mainwin->window, makecursor(GDK_ICON));
-  return FALSE;
+void leveldraw_button_released (GtkWidget *w, GdkEventButton *event)
+{
+	if (event->button == 1 && buttonx == (int)(event->x / pixwidth) - 1
+			&& buttony == (int)(event->y / pixheight) - 1)
+	{
+		grid[buttonx + buttony * gridx]
+			= nextobj (grid[buttonx + buttony * gridx]);
+		drawtile (buttonx, buttony);
+	}
 }
 
+int drag_x, drag_y; /* drag_x == -1 if source is tooldraw.  */
+int drag_source; /* 0 == none, 1 == leveldraw, 2 == tooldraw.  */
+gboolean dragging; /* flag to show that a drag is taking place.  */
 
-static gint leveldraw_button_release_event(G_GNUC_UNUSED GtkWidget *widget, GdkEventButton *event) {
-  int x = event->x/pixwidth;
-  int y = event->y/pixheight;
-  if (animmode) return FALSE;
-  gdk_window_set_cursor(mainwin->window, makecursor(GDK_LEFT_PTR));
-  if (checked || (netmode && (pendack || paralyzed))) return FALSE;
-  if (x <= 0 || y <= 0 || x >= gridx + 1 || y >= gridy + 1) {
-    dragorigin = PlNowhere;
-    return FALSE;
-  }
-  x--; y--;  
-  switch (dragorigin) {
-  case PlNowhere:
-    return FALSE;
-  case PlLevel:
-    if (x == dragx && y == dragy && dragmode == 0) {
-      if (netmode && (category == CatShared)) netsend('F', x, y);
-      grid[x+y*gridx] = nextobj(grid[x+y*gridx]);
-      drawtile(x, y);
-      /*
-      gdk_draw_pixmap(levelpixmap, widget->style->fg_gc[GTK_WIDGET_STATE(leveldraw)], 
-		      tilepic[grid[x+y*gridx]], 0, 0, (x+1)*pixwidth, (y+1)*pixheight,
-		      pixwidth, pixheight);
-      gdk_draw_pixmap(widget->window, widget->style->fg_gc[GTK_WIDGET_STATE(leveldraw)], 
-		      tilepic[grid[x+y*gridx]], 0, 0, (x+1)*pixwidth, (y+1)*pixheight,
-		      pixwidth, pixheight);
-      */
-      dragorigin = PlNowhere;
-      return FALSE;
-    }
-    else {
-      if (grid[x+y*gridx] != ObNone) {dragorigin = PlNowhere; return FALSE;}
-      if (netmode && (category == CatShared)) netsend('M', dragx, dragy, x, y);
-      grid[x+y*gridx] = dragitem; grid[dragx+dragy*gridx] = ObNone;
-      drawtile(x, y);
-      drawtile(dragx, dragy);
-      /*
-      gdk_draw_pixmap(levelpixmap, widget->style->fg_gc[GTK_WIDGET_STATE(leveldraw)], 
-		      tilepic[dragitem], 0, 0, (x+1)*pixwidth, (y+1)*pixheight,
-		      pixwidth, pixheight); 
-      gdk_draw_pixmap(widget->window, widget->style->fg_gc[GTK_WIDGET_STATE(leveldraw)], 
-		      tilepic[dragitem], 0, 0, (x+1)*pixwidth, (y+1)*pixheight,
-		      pixwidth, pixheight);
-      gdk_draw_pixmap(levelpixmap, widget->style->fg_gc[GTK_WIDGET_STATE(leveldraw)], 
-		      tilepic[ObNone], 0, 0, (dragx+1)*pixwidth, (dragy+1)*pixheight, 
-		      pixwidth, pixheight); 
-      gdk_draw_pixmap(widget->window, widget->style->fg_gc[GTK_WIDGET_STATE(leveldraw)], 
-		      tilepic[ObNone], 0, 0, (dragx+1)*pixwidth, (dragy+1)*pixheight, 
-		      pixwidth, pixheight);
-      */
-      dragorigin = PlNowhere;
-      return FALSE;
-    }
-  case PlToolbar:
-    if (grid[x+y*gridx] != ObNone) {dragorigin = PlNowhere; return FALSE;}
-    if (netmode && (category == CatShared)) netsend('I', dragitem, x, y);
-    dragbuf[dragitem]--;
-    bufsize--;
-    dragitem = drtoobj(dragitem);
-    grid[x+y*gridx] = dragitem;
-    drawtile(x, y);
-    /*
-    gdk_draw_pixmap(levelpixmap, widget->style->fg_gc[GTK_WIDGET_STATE(leveldraw)], 
-		    tilepic[dragitem], 0, 0, (x+1)*pixwidth, (y+1)*pixheight,
-		    pixwidth, pixheight);
-    gdk_draw_pixmap(widget->window, widget->style->fg_gc[GTK_WIDGET_STATE(leveldraw)], 
-		    tilepic[dragitem], 0, 0, (x+1)*pixwidth, (y+1)*pixheight,
-		    pixwidth, pixheight);
-    */
-    bardraw(); /* Then refresh the source */
-    dragorigin = PlNowhere;
-    return FALSE;
-  } 
-  return FALSE;
+void undrag (void)
+{
+	if (drag_source == 1)
+		gtk_drag_source_unset (leveldraw);
+	else if (drag_source == 2)
+		gtk_drag_source_unset (tooldraw);
+	drag_source = 0;
 }
 
-static gint tooldraw_button_release_event(G_GNUC_UNUSED GtkWidget *widget, G_GNUC_UNUSED GdkEventButton *event) {
-  if (animmode) return FALSE;  
-  gdk_window_set_cursor(mainwin->window, makecursor(GDK_LEFT_PTR));
-  if (checked || (netmode && (pendack || paralyzed))) {dragorigin = PlNowhere; return FALSE;}
-  switch (dragorigin) {
-  case PlNowhere:
-  case PlToolbar:
-    dragorigin = PlNowhere;
-    return FALSE;
-  case PlLevel:
-    if (netmode && (category == CatShared)) netsend('R', dragx, dragy);
-    dragbuf[objtodr(dragitem)]++;
-    bufsize++;
-    grid[dragx + dragy*gridx] = ObNone;
-    drawtile(dragx, dragy);
-    /*
-    gdk_draw_pixmap(levelpixmap, widget->style->fg_gc[GTK_WIDGET_STATE(leveldraw)], 
-		    tilepic[ObNone], 0, 0, (dragx+1)*pixwidth, (dragy+1)*pixheight, 
-		    pixwidth, pixheight); 
-    gdk_draw_pixmap(leveldraw->window, widget->style->fg_gc[GTK_WIDGET_STATE(leveldraw)], 
-		    tilepic[ObNone], 0, 0, (dragx+1)*pixwidth, (dragy+1)*pixheight, 
-		    pixwidth, pixheight);
-    */
-    bardraw(); 
-    dragorigin = PlNowhere;
-    return FALSE;
-  }
-  return FALSE;
+void leveldraw_pixel_to_tile (gint x, gint y, int *rx, int *ry)
+{
+	*rx = x / pixwidth - 1;
+	*ry = y / pixheight - 1;
+	if (*rx < 0 || *ry < 0 || *rx >= gridx || *ry >= gridy)
+		*rx = -1;
 }
 
+void tooldraw_pixel_to_tile (gint y, int *ry)
+{
+	*ry = y / pixheight;
+	if (*ry < 0 || *ry >= bufsize)
+		*ry = -1;
+}
+
+/* These motion-notify callbacks must always return FALSE, otherwise the
+ * drag-and-drop functions aren't called.  */
+gboolean leveldraw_move (GtkWidget *w, GdkEventMotion *e)
+{
+	if (dragging)
+		return FALSE;
+	if (drag_source != 1)
+		undrag ();
+	leveldraw_pixel_to_tile ((gint)e->x, (gint)e->y, &drag_x, &drag_y);
+	if (drag_x < 0 || grid[drag_x + drag_y * gridx] == ObNone)
+	{
+		undrag ();
+		return FALSE;
+	}
+
+	if (drag_source == 1)
+		return FALSE;
+
+	gtk_drag_source_set (leveldraw, GDK_BUTTON1_MASK, targets, 1,
+			GDK_ACTION_MOVE);
+	drag_source = 1;
+	return FALSE;
+}
+
+gboolean tooldraw_move (GtkWidget *w, GdkEventMotion *e)
+{
+	if (dragging)
+		return FALSE;
+	if (drag_source != 2)
+		undrag ();
+	tooldraw_pixel_to_tile ((gint)e->y, &drag_y);
+	if (drag_y < 0 || drag_y >= bufsize)
+	{
+		undrag ();
+		return FALSE;
+	}
+
+	if (drag_source == 2)
+		return FALSE;
+
+	gtk_drag_source_set (tooldraw, GDK_BUTTON1_MASK, targets, 1,
+			GDK_ACTION_MOVE);
+	drag_source = 2;
+	return FALSE;
+}
+
+int drag_x_orig, drag_y_orig, drag_object;
+
+void leveldraw_drag_begin ()
+{
+	printf ("entering %s\n", __PRETTY_FUNCTION__);
+	dragging = TRUE;
+	unsigned p = grid[drag_x + drag_y * gridx];
+	GdkPixbuf *buf = gdk_pixbuf_get_from_drawable (NULL, tilepic[p],
+			gtk_widget_get_colormap (leveldraw),
+			0, 0, 0, 0, -1, -1);
+	drag_x_orig = drag_x;
+	drag_y_orig = drag_y;
+	drag_object = p;
+	gtk_drag_source_set_icon_pixbuf (leveldraw, buf);
+	grid[drag_x + drag_y * gridx] = ObNone;
+	drawtile (drag_x, drag_y);
+}
+
+void tooldraw_drag_begin ()
+{
+	printf ("entering %s\n", __PRETTY_FUNCTION__);
+	dragging = TRUE;
+	unsigned p = bufselect (drag_y);
+	drag_x_orig = -1;
+	drag_y_orig = drag_y;
+	drag_object = drtoobj (p);
+	GdkPixbuf *buf = gdk_pixbuf_get_from_drawable
+		(NULL, tilepic[drag_object],
+		 gtk_widget_get_colormap (tooldraw), 0, 0, 0, 0, -1, -1);
+	gtk_drag_source_set_icon_pixbuf (tooldraw, buf);
+	--dragbuf[p];
+	--bufsize;
+	bardraw ();
+}
+
+gboolean leveldraw_drag_end ()
+{
+	printf ("entering %s\n", __PRETTY_FUNCTION__);
+	if (!dragging)
+		return;
+	dragging = FALSE;
+	if (drag_object == ObNone)
+		return;
+	printf ("object = %d\n", drag_object);
+	grid[drag_x_orig + gridx * drag_y_orig] = drag_object;
+	drawtile (drag_x_orig, drag_y_orig);
+}
+
+void tooldraw_drag_end ()
+{
+	printf ("entering %s\n", __PRETTY_FUNCTION__);
+	if (!dragging)
+		return;
+	dragging = FALSE;
+	if (drag_object == ObNone)
+		return;
+	obj p = objtodr (drag_object);
+	++dragbuf[p];
+	++bufsize;
+	bardraw ();
+}
+
+gboolean leveldraw_drag_drop (GtkWidget *widget, GdkDragContext *context,
+		gint x, gint y, guint t)
+{
+	printf ("entering %s\n", __PRETTY_FUNCTION__);
+	int dx, dy;
+	leveldraw_pixel_to_tile (x, y, &dx, &dy);
+	if (dx < 0 || grid[dx + dy * gridx] != ObNone)
+		return FALSE;
+	grid[dx + dy * gridx] = drag_object;
+	drag_object = ObNone;
+	drawtile (dx, dy);
+	gtk_drag_finish (context, TRUE, TRUE, t);
+	return TRUE;
+}
+
+gboolean tooldraw_drag_drop (GtkWidget *widget, GdkDragContext *context,
+		gint x, gint y, guint t)
+{
+	printf ("entering %s\n", __PRETTY_FUNCTION__);
+	if (drag_x_orig < 0)
+		return FALSE;
+	++dragbuf[objtodr (drag_object)];
+	++bufsize;
+	bardraw ();
+	drag_object = ObNone;
+	gtk_drag_finish (context, TRUE, TRUE, t);
+	return TRUE;
+}
+
+gboolean leveldraw_drag_move (GtkWidget *widget, GdkDragContext *context,
+		gint x, gint y, guint t)
+{
+	int dx, dy;
+	leveldraw_pixel_to_tile (x, y, &dx, &dy);
+	if (dx < 0 || grid[dx + dy * gridx] != ObNone)
+		gdk_drag_status (context, 0, t);
+	else
+		gdk_drag_status (context, GDK_ACTION_MOVE, t);
+}
+
+gboolean tooldraw_drag_move (GtkWidget *widget, GdkDragContext *context,
+		gint x, gint y, guint t)
+{
+	if (drag_x_orig < 0)
+		gdk_drag_status (context, 0, t);
+	else
+		gdk_drag_status (context, GDK_ACTION_MOVE, t);
+}
 
 
 /* Initializers */
-GdkPixmap *makemaskpm (const char *file, GdkPixmap **mask)
+GdkPixmap *makemaskpm (const char *file, GdkBitmap **mask)
 {
-  GdkImlibImage *im = gdk_imlib_load_image ((char *)file);
+  GError *err = NULL;
+  GdkPixbuf *im = gdk_pixbuf_new_from_file (file, &err);
   GdkPixmap *pm;
   gint w, h;
   if (!im)
     {
-      fprintf (stderr, "Unable to load image %s: %s\n", file, strerror (errno));
+      fprintf (stderr, "Unable to load image %s: %s\n", file, err->message);
       exit (1);
     }
-  w = im->rgb_width;
-  h = im->rgb_height;
-  gdk_imlib_render (im, w, h);
-  pm = gdk_imlib_move_image (im);
-  if (mask)
-    *mask = gdk_imlib_move_mask (im);
+  gdk_pixbuf_render_pixmap_and_mask (im, &pm, mask, 128);
   return pm;
 }
 
@@ -866,7 +855,9 @@ void initmainwin() {
   gtk_signal_connect(GTK_OBJECT(mainwin), "delete_event", (GtkSignalFunc)mainwin_delete_event, NULL);
   winpack = gtk_hbox_new(FALSE, 0);
   controlpack = gtk_vbox_new(FALSE, 0);
-  mainbar = gtk_toolbar_new(GTK_ORIENTATION_HORIZONTAL, GTK_TOOLBAR_ICONS);
+  mainbar = gtk_toolbar_new();
+  gtk_toolbar_set_style (GTK_TOOLBAR(mainbar), GTK_TOOLBAR_ICONS);
+  gtk_toolbar_set_orientation (GTK_TOOLBAR(mainbar), GTK_ORIENTATION_HORIZONTAL);
   gtk_widget_show(mainbar);
 
 
@@ -880,6 +871,7 @@ void initmainwin() {
   leveldraw = gtk_drawing_area_new();
   levelscroll = gtk_scrolled_window_new(NULL, NULL);
   gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(levelscroll), leveldraw);
+  gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(levelscroll), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
   gtk_widget_show(levelscroll); gtk_widget_show(leveldraw);
   tooldraw = gtk_drawing_area_new();
   toolscroll = gtk_scrolled_window_new(NULL, NULL);
@@ -893,27 +885,27 @@ void initmainwin() {
   gtk_signal_connect(GTK_OBJECT(leveldraw), "expose_event", (GtkSignalFunc)leveldraw_expose_event, NULL);
   gtk_signal_connect(GTK_OBJECT(tooldraw), "expose_event",(GtkSignalFunc)tooldraw_expose_event, NULL);
   gtk_signal_connect(GTK_OBJECT(leveldraw), "button_press_event", (GtkSignalFunc)leveldraw_button_press_event, NULL);
-  gtk_signal_connect(GTK_OBJECT(leveldraw), "button_release_event", (GtkSignalFunc)leveldraw_button_release_event, NULL);
-  gtk_signal_connect(GTK_OBJECT(leveldraw), "motion_notify_event", (GtkSignalFunc)leveldraw_motion_notify_event, NULL);
-  gtk_signal_connect(GTK_OBJECT(leveldraw), "leave_notify_event", (GtkSignalFunc)draw_leave_notify_event, NULL);
-  gtk_signal_connect(GTK_OBJECT(leveldraw), "enter_notify_event", (GtkSignalFunc)simple_enter_notify_event, NULL);  
-  gtk_widget_set_events(leveldraw, GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK | GDK_POINTER_MOTION_MASK |
-			GDK_LEAVE_NOTIFY_MASK | GDK_ENTER_NOTIFY_MASK);
-  gtk_signal_connect(GTK_OBJECT(tooldraw), "button_press_event", (GtkSignalFunc)tooldraw_button_press_event, NULL);
-  gtk_signal_connect(GTK_OBJECT(tooldraw), "button_release_event", (GtkSignalFunc)tooldraw_button_release_event, NULL);
-  /*  gtk_signal_connect(GTK_OBJECT(tooldraw), "motion_notify_event", (GtkSignalFunc)tooldraw_motion_notify_event, NULL);
-   */
-  gtk_signal_connect(GTK_OBJECT(tooldraw), "leave_notify_event", (GtkSignalFunc)draw_leave_notify_event, NULL);
-  gtk_signal_connect(GTK_OBJECT(tooldraw), "enter_notify_event", (GtkSignalFunc)draw_enter_notify_event, NULL);
+  gtk_signal_connect(GTK_OBJECT(leveldraw), "button_release_event", (GtkSignalFunc)leveldraw_button_released, NULL);
+  gtk_signal_connect(GTK_OBJECT(leveldraw), "motion_notify_event", (GtkSignalFunc)leveldraw_move, NULL);
+  gtk_drag_dest_set(leveldraw, GTK_DEST_DEFAULT_MOTION | GTK_DEST_DEFAULT_DROP,
+		  targets, 1, GDK_ACTION_MOVE);
+  gtk_widget_set_events(leveldraw, GDK_BUTTON_PRESS_MASK
+		  | GDK_BUTTON_RELEASE_MASK | GDK_POINTER_MOTION_MASK);
+  gtk_signal_connect(GTK_OBJECT(leveldraw), "drag-begin", (GtkSignalFunc)leveldraw_drag_begin, NULL);
+  gtk_signal_connect(GTK_OBJECT(leveldraw), "drag-drop", (GtkSignalFunc)leveldraw_drag_drop, NULL);
+  gtk_signal_connect(GTK_OBJECT(leveldraw), "drag-motion", (GtkSignalFunc)leveldraw_drag_move, NULL);
+  gtk_signal_connect(GTK_OBJECT(leveldraw), "drag-end", (GtkSignalFunc)leveldraw_drag_end, NULL);
+  gtk_signal_connect(GTK_OBJECT(tooldraw), "motion_notify_event", (GtkSignalFunc)tooldraw_move, NULL);
+  gtk_drag_dest_set(tooldraw, GTK_DEST_DEFAULT_MOTION | GTK_DEST_DEFAULT_DROP,
+		  targets, 1, GDK_ACTION_MOVE);
+  gtk_signal_connect(GTK_OBJECT(tooldraw), "drag-begin", (GtkSignalFunc)tooldraw_drag_begin, NULL);
+  gtk_signal_connect(GTK_OBJECT(tooldraw), "drag-drop", (GtkSignalFunc)tooldraw_drag_drop, NULL);
+  gtk_signal_connect(GTK_OBJECT(tooldraw), "drag-motion", (GtkSignalFunc)tooldraw_drag_move, NULL);
+  gtk_signal_connect(GTK_OBJECT(tooldraw), "drag-end", (GtkSignalFunc)tooldraw_drag_end, NULL);
   
-  gtk_widget_set_events(tooldraw, GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK |
-			GDK_LEAVE_NOTIFY_MASK|  GDK_ENTER_NOTIFY_MASK);
-  gtk_signal_connect(GTK_OBJECT(mainwin), "button_release_event", (GtkSignalFunc)mainwin_button_release_event, NULL);
-  gtk_widget_set_events(mainwin, GDK_BUTTON_RELEASE_MASK);
+  gtk_widget_set_events(tooldraw, GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK | GDK_POINTER_MOTION_MASK);
 
-  gtk_widget_realize(mainwin); /* For whatever reason, this line generates the error message:
-Gtk-CRITICAL **: file gtkwindow.c: line 992 (gtk_window_realize): assertion `!GTK_WIDGET_REALIZED (widget)' failed.
-			       */
+  gtk_widget_realize(mainwin);
   initpixmaps();
 
   add_button (INew, "Generate new level", (GtkSignalFunc)newbarbut_event, 1);
@@ -940,9 +932,8 @@ void shownetturn() {
 int main(int argc, char *argv[]) {
   srandom(time(NULL));
   gtk_init(&argc, &argv);
-  gdk_imlib_init ();
-  gtk_widget_push_visual(gdk_imlib_get_visual());
-  gtk_widget_push_colormap(gdk_imlib_get_colormap());
+  gtk_widget_push_visual(gdk_get_visual());
+  gtk_widget_push_colormap(gdk_screen_get_default_colormap(gdk_screen_get_default()));
   initmainwin();
   initnetwin();
   initdialog();

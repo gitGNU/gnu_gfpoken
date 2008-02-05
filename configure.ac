@@ -27,8 +27,7 @@ AC_PROG_CC
 AM_PROG_CC_C_O
 
 dnl Checks for libraries.
-AM_PATH_GTK(1.2.0,,[AC_MSG_ERROR(Cannot build without Gtk 1.2)])
-AM_PATH_GDK_IMLIB(,,[AC_MSG_ERROR(Cannot build without Gdk-Imlib)])
+PKG_CHECK_MODULES(GTK2, gtk+-2.0,,[AC_MSG_ERROR(Cannot build without Gtk 2)])
 
 dnl Checks for header files.
 AC_HEADER_STDC

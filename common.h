@@ -22,9 +22,7 @@
 int gamestatus;
 extern unsigned int dragbuf[DrNum]; /* Draggable buffer for list on right */
 extern unsigned int bufsize, originalbuf; /* Number of items in buffer */
-extern obj dragitem;
-extern pos dragorigin;
-extern pos dragx, dragy;
+extern pos buttonx, buttony; /* Location of button press, in tiles.  */
 
 extern pos gridx, gridy; /* Size of world */
 extern obj *grid;
