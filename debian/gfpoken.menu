@@ -1,3 +1,0 @@
-?package(gfpoken):needs="X11" section="Games/Puzzles" \
-  title="GFingerPoken" command="/usr/games/gfpoken" \
-  icon="/usr/share/pixmaps/gfpoken.xpm"
