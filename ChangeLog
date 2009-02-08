@@ -1,3 +1,8 @@
+2009-02-08  Bas Wijnen  <wijnen@debian.org>
+
+	* configure.ac: Increment version to 0.32.
+	* main.c: Add bounds checking to button press event handler.
+
 2008-02-05  Bas Wijnen  <wijnen@debian.org>
 
 	* autogen.sh: Accept GNU extensions in Makefile.am.
