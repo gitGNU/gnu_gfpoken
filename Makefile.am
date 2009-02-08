@@ -1,5 +1,5 @@
 # Makefile.am for GFingerPoken
-# Copyright 2005-2007  Bas Wijnen <wijnen@debian.org>
+# Copyright 2005-2009  Bas Wijnen <wijnen@debian.org>
 #
 # This file is part of Gfingerpoken.
 #
@@ -100,7 +100,7 @@ desktop_DATA = gfpoken.desktop
 
 install-data-local:
 	mkdir -p $(DESTDIR)$(datadir)/pixmaps
-	test -e $(pngsdir)/gfpoken.png || ln -s $(pngsdir)/gfpoken.png $(DESTDIR)$(datadir)/pixmaps/
+	test -e $(DESTDIR)$(pngsdir)/gfpoken.png || ln -s $(pngsdir)/gfpoken.png $(DESTDIR)$(datadir)/pixmaps/
 
 pngsources = \
 	png/picBorder.png \

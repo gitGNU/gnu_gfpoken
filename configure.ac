@@ -1,6 +1,6 @@
 # configure.ac for GFingerPoken
 # Copyright 1999-2000  Martin Hock
-# Copyright 2005-2008 Bas Wijnen <wijnen@debian.org>
+# Copyright 2005-2009 Bas Wijnen <wijnen@debian.org>
 #
 # This file is part of Gfingerpoken.
 #
@@ -19,7 +19,7 @@
 
 dnl Process this file with autoconf to produce a configure script.
 AC_PREREQ(2.53)
-AC_INIT(gfpoken,0.31,[[wijnen@debian.org]])
+AC_INIT(gfpoken,0.32,[[wijnen@debian.org]])
 AM_INIT_AUTOMAKE(AC_PACKAGE_NAME, AC_PACKAGE_VERSION)
 
 dnl Checks for programs.

@@ -1,6 +1,6 @@
 /* main.c - GFingerPoken Main Window, main()
  * Copyright 1999-2000  Martin Hock
- * Copyright 2005  Bas Wijnen <wijnen@debian.org>
+ * Copyright 2005-2009  Bas Wijnen <wijnen@debian.org>
  *
  * This file is part of Gfingerpoken.
  *
@@ -498,6 +498,8 @@ static gint leveldraw_button_press_event(G_GNUC_UNUSED GtkWidget *widget, GdkEve
   static guint32 time=0;
   if (animmode) return FALSE;
   buttonx = event->x/pixwidth; buttony = event->y/pixheight; 
+  if (buttonx < 0 || buttonx > gridx + 1 || buttony < 0 || buttony > gridy + 1)
+	  return FALSE;
 
   if (((buttonx == 0) + (buttony == 0) + (buttonx == gridx + 1)
 			  + (buttony == gridy + 1)) == 1) // i.e. one is true
@@ -625,7 +627,7 @@ gboolean tooldraw_move (GtkWidget *w, GdkEventMotion *e)
 	if (drag_source != 2)
 		undrag ();
 	tooldraw_pixel_to_tile ((gint)e->y, &drag_y);
-	if (drag_y < 0 || drag_y >= bufsize)
+	if (drag_y < 0)
 	{
 		undrag ();
 		return FALSE;
@@ -644,7 +646,6 @@ int drag_x_orig, drag_y_orig, drag_object;
 
 void leveldraw_drag_begin ()
 {
-	printf ("entering %s\n", __PRETTY_FUNCTION__);
 	dragging = TRUE;
 	unsigned p = grid[drag_x + drag_y * gridx];
 	GdkPixbuf *buf = gdk_pixbuf_get_from_drawable (NULL, tilepic[p],
@@ -660,7 +661,6 @@ void leveldraw_drag_begin ()
 
 void tooldraw_drag_begin ()
 {
-	printf ("entering %s\n", __PRETTY_FUNCTION__);
 	dragging = TRUE;
 	unsigned p = bufselect (drag_y);
 	drag_x_orig = -1;
@@ -677,7 +677,6 @@ void tooldraw_drag_begin ()
 
 gboolean leveldraw_drag_end ()
 {
-	printf ("entering %s\n", __PRETTY_FUNCTION__);
 	if (!dragging)
 		return;
 	dragging = FALSE;
@@ -690,7 +689,6 @@ gboolean leveldraw_drag_end ()
 
 void tooldraw_drag_end ()
 {
-	printf ("entering %s\n", __PRETTY_FUNCTION__);
 	if (!dragging)
 		return;
 	dragging = FALSE;
@@ -705,7 +703,6 @@ void tooldraw_drag_end ()
 gboolean leveldraw_drag_drop (GtkWidget *widget, GdkDragContext *context,
 		gint x, gint y, guint t)
 {
-	printf ("entering %s\n", __PRETTY_FUNCTION__);
 	int dx, dy;
 	leveldraw_pixel_to_tile (x, y, &dx, &dy);
 	if (dx < 0 || grid[dx + dy * gridx] != ObNone)
@@ -720,7 +717,6 @@ gboolean leveldraw_drag_drop (GtkWidget *widget, GdkDragContext *context,
 gboolean tooldraw_drag_drop (GtkWidget *widget, GdkDragContext *context,
 		gint x, gint y, guint t)
 {
-	printf ("entering %s\n", __PRETTY_FUNCTION__);
 	if (drag_x_orig < 0)
 		return FALSE;
 	++dragbuf[objtodr (drag_object)];

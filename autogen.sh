@@ -1,6 +1,7 @@
 #!/bin/bash
 #
 # This file is part of Gfingerpoken.
+# Copyright 2005-2009 Bas Wijnen <wijnen@debian.org>
 #
 # Gfingerpoken is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -18,3 +19,5 @@
 export AUTOMAKE="automake-1.10 --foreign"
 export ACLOCAL=aclocal-1.10
 autoreconf --install --force --symlink
+
+test "$NOCONFIGURE" || ./configure "$@"
