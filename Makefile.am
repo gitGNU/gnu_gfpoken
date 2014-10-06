@@ -1,5 +1,5 @@
 # Makefile.am for GFingerPoken
-# Copyright 2005-2009  Bas Wijnen <wijnen@debian.org>
+# Copyright 2005-2014  Bas Wijnen <wijnen@debian.org>
 #
 # This file is part of Gfingerpoken.
 #
@@ -27,7 +27,7 @@ gfpoken_CPPFLAGS = -DDATADIR=\"$(pkgdatadir)\"
 gfpoken_CFLAGS = $(GTK2_CFLAGS)
 # Don't use autoconf substitution here, because it would include
 # implicit dependencies.
-gfpoken_LDFLAGS = -lgtk-x11-2.0
+gfpoken_LDADD = -lgtk-x11-2.0 -lgdk-x11-2.0 -lgdk_pixbuf-2.0 -lgobject-2.0
 
 gfpoken_SOURCES = \
 	convert.c \
@@ -132,7 +132,6 @@ pngs_DATA = \
 	$(pngsources)
 
 EXTRA_DIST = \
-	autogen.sh \
 	art/mirror.xcf \
 	art/marbles.blend \
 	art/mktiles \

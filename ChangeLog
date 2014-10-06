@@ -1,3 +1,15 @@
+2014-10-05  Bas Wijnen <wijnen@debian.org>
+
+	* configure.ac: Increment version to 1.
+	* Makefile.am, autogen.sh: Remove autogen.sh; users should use
+	  autoreconf.
+	* Makefile.am: Fix library dependencies. (Thanks to Paul Wise and Ilya
+	  Barygin)
+	* art/marbles.blend: Make background transparent for new blender
+	  version.
+	* art/mkmarbles: Pass BLENDERDIR to blender as option. (Thanks to Paul
+	  Wise)
+
 2009-02-08  Bas Wijnen  <wijnen@debian.org>
 
 	* configure.ac: Increment version to 0.32.
